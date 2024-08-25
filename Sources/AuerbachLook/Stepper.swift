@@ -17,11 +17,11 @@
 import UIKit
 
 // A simple stepper which, unlike UIStepper, actually displays its value
-protocol StepperDelegate {
+public protocol StepperDelegate {
     func valueChanged(_ stepper: Stepper)
     func displayText(_ value: Int) -> String
 }
-class Stepper : UIView {
+public class Stepper : UIView {
     let decr : UIButton
     let display : UILabel
     let incr : UIButton
@@ -30,9 +30,9 @@ class Stepper : UIView {
             display.text = delegate?.displayText(value)
         }
     }
-    var delegate : StepperDelegate?
-    var minimumValue : Int? = nil
-    var maximumValue : Int? = nil
+    public var delegate : StepperDelegate?
+    public var minimumValue : Int? = nil
+    public var maximumValue : Int? = nil
 
     // Make a new Stepper
     init() {
@@ -52,7 +52,7 @@ class Stepper : UIView {
     }
 
     // Perform layout of parts when self is layed out
-    override var frame : CGRect {
+    public override var frame : CGRect {
         didSet {
             let width = bounds.width / 3
             decr.frame = CGRect(x: bounds.minX, y: bounds.minY, width: width, height: bounds.height)

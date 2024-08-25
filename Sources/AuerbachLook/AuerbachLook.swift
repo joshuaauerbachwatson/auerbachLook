@@ -27,29 +27,29 @@ fileprivate let ConfirmButtonTitle = "Confirm"
 //
 
 /* The minimal border (in points) between things on the screen; even at the edges if you need the space */
-let border = CGFloat(3)
+public let border = CGFloat(3)
 
 /* The pixel width of the shorter dimension of a tablet (used only to calibrate font sizes) */
-let tabletShortDimension = CGFloat(768)
+public let tabletShortDimension = CGFloat(768)
 
 /* The font size used for text on a tablet */
-let baseHelpFontSize = CGFloat(30)
+public let baseHelpFontSize = CGFloat(30)
 
 //
 // Color constants
 //
 
 /* The background color to use for textual buttons */
-let ButtonBackground = UIColor.black
+public let ButtonBackground = UIColor.black
 
 /* The normal text color to use except when you are using something else */
-let NormalTextColor = UIColor.black
+public let NormalTextColor = UIColor.black
 
 /* The normal text color for TouchableLabels */
-let TouchableTextColor = UIColor.blue
+public let TouchableTextColor = UIColor.blue
 
 /* The background color for touchable labels */
-let TouchableBackground = UIColor(white: 0.8, alpha: 1)
+public let TouchableBackground = UIColor(white: 0.8, alpha: 1)
 
 //
 // Text constants
@@ -63,7 +63,7 @@ let BummerButtonTitle = "Bummer"
 //
 
 // Display an error message modally, with a single "Bummer" button to dismiss the popup
-func bummer(title: String, message: String, host: UIViewController) {
+public func bummer(title: String, message: String, host: UIViewController) {
     let action = UIAlertAction(title: BummerButtonTitle, style: .cancel, handler: nil)
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     alert.addAction(action)
@@ -71,7 +71,7 @@ func bummer(title: String, message: String, host: UIViewController) {
 }
 
 // Configure a button given a title and action and add it to a view
-func configureButton(_ button: UIButton, title: String, target: AnyObject, action: Selector, parent: UIView) {
+public func configureButton(_ button: UIButton, title: String, target: AnyObject, action: Selector, parent: UIView) {
     button.setTitle(title, for: .normal)
     button.titleLabel?.adjustsFontSizeToFitWidth = true
     button.titleLabel?.font = getTextFont()
@@ -83,7 +83,7 @@ func configureButton(_ button: UIButton, title: String, target: AnyObject, actio
 
 // Configure a label with a given a background color.  Text alignment is always centered and the initial text color
 // 'normal'.  Sdds the label to a view
-func configureLabel(_ label: UILabel, _ color: UIColor, parent: UIView) {
+public func configureLabel(_ label: UILabel, _ color: UIColor, parent: UIView) {
     label.backgroundColor = color
     label.textColor = NormalTextColor
     label.font = getTextFont()
@@ -93,7 +93,7 @@ func configureLabel(_ label: UILabel, _ color: UIColor, parent: UIView) {
 }
 
 // Configure a Text Field in a generally useful way, given a background color and a parent
-func configureTextField(_ ans: UITextField, _ color: UIColor, parent: UIView) {
+public func configureTextField(_ ans: UITextField, _ color: UIColor, parent: UIView) {
     ans.font = getTextFont()
     ans.textAlignment = .center
     ans.backgroundColor = color
@@ -104,7 +104,7 @@ func configureTextField(_ ans: UITextField, _ color: UIColor, parent: UIView) {
 }
 
 // Configure a TouchableLabel given a background color and an action.  Add to a view
-func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, action: Selector, tag: Int = 0, parent: UIView) {
+public func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, action: Selector, tag: Int = 0, parent: UIView) {
     ans.view.backgroundColor = TouchableBackground
     ans.view.textColor = TouchableTextColor
     ans.view.textAlignment = .center
@@ -114,7 +114,7 @@ func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, action: S
 }
 
 // Configure a stepper
-func configureStepper(_ stepper: Stepper, delegate: StepperDelegate, value: Int, parent: UIView) {
+public func configureStepper(_ stepper: Stepper, delegate: StepperDelegate, value: Int, parent: UIView) {
     stepper.delegate = delegate
     stepper.value = value
     parent.addSubview(stepper)
@@ -122,7 +122,7 @@ func configureStepper(_ stepper: Stepper, delegate: StepperDelegate, value: Int,
 
 // Get the appropriate font to use in a label, based on a base font size which is good for iPads.  Phones use a reduced font based on the
 // ratio of their shortest dimension to the iPad's shortest dimension.
-func getTextFont() -> UIFont {
+public func getTextFont() -> UIFont {
     let bounds = UIScreen.main.bounds
     let shortDimension = bounds.width < bounds.height ? bounds.width : bounds.height
     let fontRatio = min(shortDimension / tabletShortDimension, 1.0)
@@ -130,14 +130,14 @@ func getTextFont() -> UIFont {
 }
 
 // Make a label configured in the standard way
-func makeLabel(_ color: UIColor, parent: UIView) -> UILabel {
+public func makeLabel(_ color: UIColor, parent: UIView) -> UILabel {
     let label = UILabel()
     configureLabel(label, color, parent: parent)
     return label
 }
 
 // Prompt for a string value using an alert controller
-func promptForName(_ vc: UIViewController, title: String, message: String, placeholder: String?,
+public func promptForName(_ vc: UIViewController, title: String, message: String, placeholder: String?,
                    handler: @escaping (String?)->Void) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let cancel = UIAlertAction(title: CancelButtonTitle, style: .cancel) { _ in
