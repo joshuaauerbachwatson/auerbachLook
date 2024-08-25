@@ -25,7 +25,7 @@ public class Stepper : UIView {
     let decr : UIButton
     let display : UILabel
     let incr : UIButton
-    var value : Int {
+    public var value : Int {
         didSet {
             display.text = delegate?.displayText(value)
         }

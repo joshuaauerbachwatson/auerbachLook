@@ -19,7 +19,7 @@ import UIKit
 // Pairs a transparent button with a view, making the view touchable without the complexity of an explicit gesture recognizer
 
 open class TouchableView<View: UIView> : UIView {
-    let view : View
+    public let view : View
     let button : UIButton
     
     public init(_ view: View) {
