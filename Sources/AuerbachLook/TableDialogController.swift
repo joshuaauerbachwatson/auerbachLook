@@ -154,22 +154,22 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     // view not editable.
 
     // Called when a row is selected.  Returns true to dismiss the dialog, false to handle dismissal separately
-    public func rowSelected(_ row: Int) -> Bool {
+    open func rowSelected(_ row: Int) -> Bool {
         Logger.logFatalError("Must implement 'rowSelected'")
     }
 
     // Provide the information for each row's label
-    public func initializeRow(_ label: UILabel, _ row: Int) {
+    open func initializeRow(_ label: UILabel, _ row: Int) {
         Logger.logFatalError("Must implement 'initializeRow'")
     }
 
     // Get the currently selected row
-    public func getCurrentRow() -> Int {
+    open func getCurrentRow() -> Int {
         Logger.logFatalError("Must implement 'getCurrentRow'")
     }
 
     // Delete from the model given a row number
-    public func deleteRow(_ row: Int) {
+    open func deleteRow(_ row: Int) {
         Logger.logFatalError("Must implement 'deleteRow'")
     }
 
@@ -181,7 +181,7 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     // Subclasses must provide overrides of these methods iff using sections (defaults work only for single section case)
 
     // Called when a path is selected.  Returns true to dismiss the dialog, false to handle dismissal separately
-    public func pathSelected(_ path: IndexPath) -> Bool {
+    open func pathSelected(_ path: IndexPath) -> Bool {
         if path.section == 0 {
             return rowSelected(path.row)
         }
@@ -189,7 +189,7 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     }
 
     // Provide the information for each path's label
-    public func initializePath(_ label: UILabel, _ path: IndexPath) {
+    open func initializePath(_ label: UILabel, _ path: IndexPath) {
         if path.section == 0 {
             initializeRow(label, path.row)
             return
@@ -198,7 +198,7 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     }
 
     // Get the currently selected path
-    public func getCurrentPath() -> IndexPath {
+    open func getCurrentPath() -> IndexPath {
         if sectionCount == 1 {
             return IndexPath(row: getCurrentRow(), section: 0)
         }
@@ -206,7 +206,7 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     }
 
     // Delete from the model given a path
-    public func deletePath(_ path: IndexPath) {
+    open func deletePath(_ path: IndexPath) {
         if path.section == 0 {
             deleteRow(path.row)
             return

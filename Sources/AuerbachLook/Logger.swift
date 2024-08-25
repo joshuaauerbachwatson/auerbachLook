@@ -32,7 +32,7 @@ public class Logger {
     private init() {} // All static
 
     // Constants
-    static let LogPrefix = "log"
+    public static let LogPrefix = "log"
     private static let LogThreshhold : UInt64 = 1024 * 1024
     private static let KeepThreshhold = 8
     private static let LogOpenAnomalyTemplate = "Unable to open the log at %@"
