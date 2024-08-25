@@ -25,7 +25,7 @@ fileprivate let DialogSpacer = CGFloat(4)
 //
 
 /* Convenient constructor for colors (uses three integers 0-255 for RGB) */
-extension UIColor {
+public extension UIColor {
     convenience init(_ r: Int, _ g: Int, _ b: Int) {
         let div = CGFloat(255)
         self.init(red: r/div, green: g/div, blue: b/div, alpha: CGFloat(1.0))
@@ -33,14 +33,14 @@ extension UIColor {
 }
 
 /* Java-like String.trim() */
-extension String {
+public extension String {
     func trim() -> String {
         return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
     }
 }
 
 // Add 'center' property to CGRect and CALayer
-extension CGRect {
+public extension CGRect {
     var center : CGPoint {
         get { return CGPoint(x: midX, y: midY) }
         set {
@@ -50,7 +50,7 @@ extension CGRect {
         }
     }
 }
-extension CALayer {
+public extension CALayer {
     var center : CGPoint {
         get { return frame.center }
         set { frame.center = newValue }
@@ -58,7 +58,7 @@ extension CALayer {
 }
 
 // Simplify some common call sequences to CATransaction
-extension CATransaction {
+public extension CATransaction {
     static func beginNoAnimation() {
         begin()
         setAnimationDuration(0)
@@ -71,7 +71,7 @@ extension CATransaction {
 }
 
 // Allow a CGSize or CGRect to be chararactized as landscape (vs portrait) and retrieve the min of height and width
-extension CGSize {
+public extension CGSize {
     var landscape: Bool {
         get {
             return width > height
@@ -83,7 +83,7 @@ extension CGSize {
         }
     }
 }
-extension CGRect {
+public extension CGRect {
     var landscape: Bool {
         get {
             return width > height
@@ -101,37 +101,37 @@ extension CGRect {
 //
 
 /* Permit addition of two points (allows a translation to be applied to a point) */
-func + (_ p: CGPoint, _ q: CGPoint) -> CGPoint {
+public func + (_ p: CGPoint, _ q: CGPoint) -> CGPoint {
     return CGPoint(x: p.x + q.x, y: p.y + q.y)
 }
 
 /* Permit subtraction of two points (allows a translation to be applied to a point in a negative direction) */
-func - (_ p: CGPoint, _ q: CGPoint) -> CGPoint {
+public func - (_ p: CGPoint, _ q: CGPoint) -> CGPoint {
     return CGPoint(x: p.x - q.x, y: p.y - q.y)
 }
 
 /* Permits a point (translation) to be added to a rectangle */
-func + (_ rect: CGRect, _ q: CGPoint) -> CGRect {
+public func + (_ rect: CGRect, _ q: CGPoint) -> CGRect {
     return CGRect(origin: rect.origin + q, size: rect.size)
 }
 
 /* Permits a point (translation) to be subtracted from a rectangle */
-func - (_ rect: CGRect, _ q: CGPoint) -> CGRect {
+public func - (_ rect: CGRect, _ q: CGPoint) -> CGRect {
     return CGRect(origin: rect.origin - q, size: rect.size)
 }
 
 /* Multiplies a point by a scale factor */
-func * (_ point: CGPoint, _ scale: CGFloat) -> CGPoint {
+public func * (_ point: CGPoint, _ scale: CGFloat) -> CGPoint {
     return CGPoint(x: point.x * scale, y: point.y * scale)
 }
 
 /* Multiplies a size by a scale factor (using CGAffineTransform) */
-func * (_ size: CGSize, _ scale: CGFloat) -> CGSize {
+public func * (_ size: CGSize, _ scale: CGFloat) -> CGSize {
     return size.applying(CGAffineTransform(scaleX: scale, y: scale))
 }
 
 /* Applies a scale factor to a rectangle (using CGAffineTransform) */
-func * (_ rect: CGRect, _ scale: CGFloat) -> CGRect {
+public func * (_ rect: CGRect, _ scale: CGFloat) -> CGRect {
     return rect.applying(CGAffineTransform(scaleX: scale, y: scale))
 }
 
@@ -141,18 +141,18 @@ func * (_ rect: CGRect, _ scale: CGFloat) -> CGRect {
 
 // Convenience for getting the X value to place one view to the right of another (assumes DialogSpacer gives the amount
 // of space
-func after(_ view: UIView) -> CGFloat {
+public func after(_ view: UIView) -> CGFloat {
     return view.frame.maxX + DialogSpacer
 }
 
 // Conveniece for getting the Y value to place one view below another (assumes DialogSpacer gives the amount of space
 // between views)
-func below(_ view: UIView) -> CGFloat {
+public func below(_ view: UIView) -> CGFloat {
     return view.frame.maxY + DialogSpacer
 }
 
 // Crop an image to a given rectangle
-func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
+public func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
     // A correct cropping requires the image to be in the "up" orientation, so we first assure that.
     let imageToCrop = ensureUpOrientation(original)
     // Cropping is available at the CGImage level, so get that form
@@ -168,7 +168,7 @@ func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
 }
 
 // Ensure that an image is in the "up" orientation by redrawing it if not
-func ensureUpOrientation(_ image: UIImage)->UIImage {
+public func ensureUpOrientation(_ image: UIImage)->UIImage {
     if image.imageOrientation == .up {
         return image
     }
@@ -180,7 +180,7 @@ func ensureUpOrientation(_ image: UIImage)->UIImage {
 }
 
 // Get documents directory as a URL.  This method will crash the app if there is no documents directory, but I believe that never happens.
-func getDocDirectory() -> URL {
+public func getDocDirectory() -> URL {
     if let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
         return docs
     }
@@ -190,20 +190,20 @@ func getDocDirectory() -> URL {
 }
 
 // Get the size of a file, if possible (returns nil if the attempt fails, but I don't believe this is likely)
-func getFileSize(_ path: String) -> UInt64? {
+public func getFileSize(_ path: String) -> UInt64? {
     let fileAttributes = try? FileManager.default.attributesOfItem(atPath: path)
     let size = fileAttributes?[FileAttributeKey.size]
     return (size as? NSNumber)?.uint64Value
 }
 
 // Get the suffix portion of a file name in prefix/suffix form
-func getSuffix(_ file: String, _ prefixLen: Int) -> Int? {
+public func getSuffix(_ file: String, _ prefixLen: Int) -> Int? {
     let indexFrom = file.index(file.startIndex, offsetBy: prefixLen)
     return Int(file.suffix(from: indexFrom))
 }
 
 // Hide some controls
-func hide(_ ctls: UIView...) {
+public func hide(_ ctls: UIView...) {
     for ctl in ctls {
         ctl.isHidden = true
     }
@@ -214,7 +214,7 @@ func hide(_ ctls: UIView...) {
 // If a host is given, the dialog is always attempted but does not always work since the host could be busy with another dialog or
 // may not be fully initialized.  We don't test for these conditions because there isn't a solidly reliable test.   If the dialog
 // fails, it will result in a message on the console, but a less informative one.
-func notImplemented(_ function: String, host maybeHost: UIViewController?) {
+public func notImplemented(_ function: String, host maybeHost: UIViewController?) {
     if let host = maybeHost {
         bummer(title: "Not Implemented", message: "You need to write the code for \(function)", host: host)
     } else {
@@ -224,19 +224,19 @@ func notImplemented(_ function: String, host maybeHost: UIViewController?) {
 
 // Convenience for setting the frame of a view.  Returns the view as a further convenience for chaining.
 @discardableResult
-func place(_ view: UIView, _ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> UIView {
+public func place(_ view: UIView, _ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> UIView {
     view.frame = CGRect(x: x, y: y, width: width, height: height)
     return view
 }
 
 // Get a random string of a given length formed from alphanumeric characters
-func randomString(length: Int) -> String {
+public func randomString(length: Int) -> String {
   let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
   return String((0..<length).map{ _ in letters.randomElement()! })
 }
 
 // Run an sequence of automations provided as an array of functions
-func runAnimationSequence(_ seq: [()->Void], completion: @escaping ()->Void) {
+public func runAnimationSequence(_ seq: [()->Void], completion: @escaping ()->Void) {
     var next = 0
     func runNextAnimation() {
         guard next < seq.count else { return }
@@ -255,7 +255,7 @@ func runAnimationSequence(_ seq: [()->Void], completion: @escaping ()->Void) {
 
 // Determine the safe area of a main view.  Since we are assuming at least iOS 11, we
 // can use the safeAreaInsets property of the view to compute the result.
-func safeAreaOf(_ view: UIView) -> CGRect {
+public func safeAreaOf(_ view: UIView) -> CGRect {
     let insets = view.safeAreaInsets
     return view.bounds.inset(by: insets)
 }
@@ -263,7 +263,7 @@ func safeAreaOf(_ view: UIView) -> CGRect {
 // Parse a file name into prefix and suffix form while looking for a particular prefix; useful when scanning a folder for files of a given kind
 // Boolean return aids in chaining when scanning for multiple kinds in a single pass
 @discardableResult
-func screenFileName(_ file: String, prefix: String, into: inout [Int]) -> Bool {
+public func screenFileName(_ file: String, prefix: String, into: inout [Int]) -> Bool {
     if file.hasPrefix(prefix), let suffix = getSuffix(file, prefix.count) {
         into.append(suffix)
         return true
@@ -272,7 +272,7 @@ func screenFileName(_ file: String, prefix: String, into: inout [Int]) -> Bool {
 }
 
 // Provide a shuffled version of an array
-func shuffle<T>(_ array : [T]) -> [T] {
+public func shuffle<T>(_ array : [T]) -> [T] {
     var holder = [T]()
     holder.append(contentsOf: array)
     var ans = [T]()
@@ -284,7 +284,7 @@ func shuffle<T>(_ array : [T]) -> [T] {
 }
 
 // Unhide some controls
-func unhide(_ ctls: UIView...) {
+public func unhide(_ ctls: UIView...) {
     for ctl in ctls {
         ctl.isHidden = false
     }

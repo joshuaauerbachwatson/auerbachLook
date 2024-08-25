@@ -28,7 +28,7 @@ import UIKit
 
 // Also includes some useful global functions packaged here rather than in "Useful" because they are used here or in app extensions (and Useful has stuff
 // that's hard to incorporate into app extensions).
-class Logger {
+public class Logger {
     private init() {} // All static
 
     // Constants
@@ -48,7 +48,7 @@ class Logger {
     // Public API
 
     // Log a message of any kind to the implicit log location
-    static func log(_ message: String) {
+    public static func log(_ message: String) {
         if debugged {
             print(message)
         }
@@ -68,7 +68,7 @@ class Logger {
     }
 
     // Log to a specific log location.  Given a nil handle, this method does nothing but is harmless
-    static func log(_ handle: FileHandle?, _ message: String) {
+    public static func log(_ handle: FileHandle?, _ message: String) {
         let toLog = formatter.string(from: Date()) + " " + message + "\n"
         if let handle = handle, let data = toLog.data(using: .utf8) {
            handle.write(data)
@@ -76,25 +76,25 @@ class Logger {
     }
 
     // Log the dismissal of one view controller by another (performs the dismissal also)
-    static func logDismiss(_ dismissed: UIViewController, host: UIViewController, animated: Bool) {
+    public static func logDismiss(_ dismissed: UIViewController, host: UIViewController, animated: Bool) {
         log("Dismissing " + String(describing: type(of: dismissed)) + ", returning to " + String(describing: type(of: host)))
         host.dismiss(animated: animated)
     }
 
     // Log a message to the implicit log for a fatal error and then call fatalError
-    static func logFatalError(_ message: String) -> Never {
+    public static func logFatalError(_ message: String) -> Never {
         log("Fatal Error: " + message)
         fatalError(message)
     }
 
     // Log the presentation of one view controller by another (performs the presentation also)
-    static func logPresent(_ presented: UIViewController, host: UIViewController, animated: Bool) {
+    public static func logPresent(_ presented: UIViewController, host: UIViewController, animated: Bool) {
         log("Presenting " + String(describing: type(of: presented)))
         host.present(presented, animated: animated)
     }
 
     // Open a log to a specific location.  This can fail silently if the file doesn't exist, and it is up to the caller to handle that case.
-    static func openLog(_ path: String) -> FileHandle? {
+    public static func openLog(_ path: String) -> FileHandle? {
         if let handle = FileHandle(forWritingAtPath: path) {
             handle.seekToEndOfFile()
             return handle
@@ -104,7 +104,7 @@ class Logger {
     }
 
     // Get the indices of all logs that exist, newest first.  This is helpful when preparing to transmit a problem report
-    static func getAllLogIndices() -> [Int] {
+    public static func getAllLogIndices() -> [Int] {
         var logs = [Int]()
         let allFiles = (try? FileManager.default.contentsOfDirectory(atPath: getDocDirectory().path)) ?? []
         for file in allFiles {
@@ -114,7 +114,7 @@ class Logger {
     }
 
     // Make a log path from an index
-    static func makeLogPath(_ index: Int) -> String {
+    public static func makeLogPath(_ index: Int) -> String {
         return getDocDirectory().appendingPathComponent(LogPrefix).path + String(index)
     }
 

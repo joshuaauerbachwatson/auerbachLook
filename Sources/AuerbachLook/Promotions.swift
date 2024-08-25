@@ -21,67 +21,67 @@ import UIKit
 // Int promotions
 
 // Multiply
-func * (_ left: CGFloat, _ right: Int) -> CGFloat {
+public func * (_ left: CGFloat, _ right: Int) -> CGFloat {
     return left * CGFloat(right)
 }
-func * (_ left: Int, _ right: CGFloat) -> CGFloat {
+public func * (_ left: Int, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) * right
 }
 
 // Add
-func + (_ left: CGFloat, _ right: Int) -> CGFloat {
+public func + (_ left: CGFloat, _ right: Int) -> CGFloat {
     return left + CGFloat(right)
 }
-func + (_ left: Int, _ right: CGFloat) -> CGFloat {
+public func + (_ left: Int, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) + right
 }
 
 // Divide
-func / (_ left: CGFloat, _ right: Int) -> CGFloat {
+public func / (_ left: CGFloat, _ right: Int) -> CGFloat {
     return left / CGFloat(right)
 }
-func / (_ left: Int, _ right: CGFloat) -> CGFloat {
+public func / (_ left: Int, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) / right
 }
 
 // Subtract
-func - (_ left: CGFloat, _ right: Int) -> CGFloat {
+public func - (_ left: CGFloat, _ right: Int) -> CGFloat {
     return left - CGFloat(right)
 }
-func - (_ left: Int, _ right: CGFloat) -> CGFloat {
+public func - (_ left: Int, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) - right
 }
 
 // Double promotions
 
 // Multiply
-func * (_ left: CGFloat, _ right: Double) -> CGFloat {
+public func * (_ left: CGFloat, _ right: Double) -> CGFloat {
     return left * CGFloat(right)
 }
-func * (_ left: Double, _ right: CGFloat) -> CGFloat {
+public func * (_ left: Double, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) * right
 }
 
 // Add
-func + (_ left: CGFloat, _ right: Double) -> CGFloat {
+public func + (_ left: CGFloat, _ right: Double) -> CGFloat {
     return left + CGFloat(right)
 }
-func + (_ left: Double, _ right: CGFloat) -> CGFloat {
+public func + (_ left: Double, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) + right
 }
 
 // Divide
-func / (_ left: CGFloat, _ right: Double) -> CGFloat {
+public func / (_ left: CGFloat, _ right: Double) -> CGFloat {
     return left / CGFloat(right)
 }
-func / (_ left: Double, _ right: CGFloat) -> CGFloat {
+public func / (_ left: Double, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) / right
 }
 
 // Subtract
-func - (_ left: CGFloat, _ right: Double) -> CGFloat {
+public func - (_ left: CGFloat, _ right: Double) -> CGFloat {
     return left - CGFloat(right)
 }
-func - (_ left: Double, _ right: CGFloat) -> CGFloat {
+public func - (_ left: Double, _ right: CGFloat) -> CGFloat {
     return CGFloat(left) - right
 }

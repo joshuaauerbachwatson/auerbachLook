@@ -18,22 +18,22 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 // A small variant on UIPanGestureRecognizer that fires a separate closure for a tap (touch ends without movement)
-class TapAndDragRecognizer : UIPanGestureRecognizer {
+public class TapAndDragRecognizer : UIPanGestureRecognizer {
     // Closure to call when tap is recognized
-    let onTap : ((UITouch) -> ())
+    public let onTap : ((UITouch) -> ())
 
     // Indicates whether we are looking for a tap.  This is true in the quiescent state but becomes false when
     // a drag begins.
-    var lookForTap = true
+    public var lookForTap = true
 
     // Initializer extends UIPanGestureRecognizer syntax with an extra parameter for tap.
-    init(target: Any, onDrag: Selector, onTap: @escaping ((UITouch)->())) {
+    public init(target: Any, onDrag: Selector, onTap: @escaping ((UITouch)->())) {
         self.onTap = onTap
         super.init(target: target, action: onDrag)
     }
 
     // Catch touchesMoved so we can suppress monitoring for tap
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesMoved(touches, with: event)
         if state == .began {
             lookForTap = false
@@ -41,7 +41,7 @@ class TapAndDragRecognizer : UIPanGestureRecognizer {
     }
 
     // Catch touches ended to see if we need to deliver a tap recognition
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesEnded(touches, with: event)
         if lookForTap, let touch = touches.first {
             onTap(touch)
