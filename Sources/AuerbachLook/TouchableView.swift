@@ -66,7 +66,7 @@ open class TouchableView<View: UIView> : UIView {
 
 // Variant which wants the view to be a UILabel.  Provides convenient access to 'text' property
 public class TouchableLabel : TouchableView<UILabel> {
-    init() {
+    public init() {
         super.init(UILabel())
     }
 

@@ -35,7 +35,7 @@ public class Stepper : UIView {
     public var maximumValue : Int? = nil
 
     // Make a new Stepper
-    init() {
+    public init() {
         value = -1          // Placeholder
         decr = UIButton()
         incr = UIButton()
@@ -47,7 +47,7 @@ public class Stepper : UIView {
     }
 
     // Useless but required
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
