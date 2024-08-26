@@ -151,7 +151,7 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
 
     // Subclasses must provide real implementations of either the 'row' methods (single section) or the 'path' methods
     // (multiple sections).  The subclass can omit implementing the "delete" method if (but only if) it sets the table
-    // view not editable.
+    // view not editable.  All must implement tableView:numberOfRowsInSection.
 
     // Called when a row is selected.  Returns true to dismiss the dialog, false to handle dismissal separately
     open func rowSelected(_ row: Int) -> Bool {
@@ -173,8 +173,8 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
         Logger.logFatalError("Must implement 'deleteRow'")
     }
 
-    // This is also a protocol conformance method but has no generic aspects
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // Get the number of rows in a section
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         Logger.logFatalError("Must implement 'tableView(_:numberOfRowsInSection:)'")
     }
 
