@@ -35,6 +35,9 @@ public let tabletShortDimension = CGFloat(768)
 /* The font size used for text on a tablet */
 public let baseHelpFontSize = CGFloat(30)
 
+/* The fixed height of a typical label */
+public let FixedLabelHeight = CGFloat(25)
+
 //
 // Color constants
 //
