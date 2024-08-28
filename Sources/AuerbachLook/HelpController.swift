@@ -20,30 +20,40 @@ import MessageUI
 
 // Controller for a full screen modal view with a web view and a button to dismiss it.  Used to display help texts.
 
-fileprivate let HelpTextBackground = UIColor.white
-fileprivate let HelpViewBackground = UIColor(170, 110, 40)
-fileprivate let SendFeedback = "sendFeedback" /* Internal script name */
+let HelpTextBackground = UIColor.white // Also used by TipController
+let HelpViewBackground = UIColor(170, 110, 40) // Also used by TipController
+fileprivate let SendFeedback = "sendFeedback" // Internal script name
+fileprivate let ResetTips = "resetTips" /* Internal script name */
 fileprivate let ReturnLabelWidth = CGFloat(150)
 fileprivate let NoEmailTitle = "No Email"
 fileprivate let NoEmailMessage =
     "Cannot send problem report because email is not configured on this device or is not available to this app"
 fileprivate let HelpExt = "html"
 
+public protocol TipResetter {
+    func reset()
+}
 
 public class HelpController: UIViewController {
     let helpPage : String
     let email : String
     let returnText : String
     let appName : String
+    let tipReset : TipResetter?
     let returnButton = UIButton()
     var webView : WKWebView!  // Delayed init (viewDidLoad)
 
-    // Arguments are 1.  The resource name of the help page to display, 2. Text to use in the return button,
-    // 3. The name to use when referring to the app.
-    public init(helpPage: String, email: String, returnText: String, appName: String) {
+    // Arguments are 
+    // - The resource name of the help page to display,
+    // - The email address to which feedback should be sent.
+    // - Text to use in the return button,
+    // - The name to use when referring to the app.
+    // - (optional) THe TipResetter to invoke when the option to restore tips is selected.
+    public init(helpPage: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
         self.helpPage = helpPage
         self.email = email
         self.returnText = returnText
+        self.tipReset = tipReset
         self.appName = appName
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = UIModalPresentationStyle.fullScreen
@@ -70,7 +80,7 @@ public class HelpController: UIViewController {
         let config = WKWebViewConfiguration()
         let contentCtl = WKUserContentController()
         contentCtl.add(self, name: SendFeedback)
-        // TODO probably want "Tips" as well
+        contentCtl.add(self, name: ResetTips)
         config.userContentController = contentCtl
         webView = WKWebView(frame: CGRect.zero, configuration: config) // Satisfies delayed init
         webView.backgroundColor = HelpTextBackground
@@ -103,7 +113,7 @@ public class HelpController: UIViewController {
     func doLayout() {
         let returnY = safeAreaOf(view).minY + border
         let returnX = view.bounds.width / CGFloat(2) - ReturnLabelWidth / 2
-        returnButton.frame = CGRect(x: returnX, y: returnY, width: ReturnLabelWidth, height: FixedLabelHeight)
+        returnButton.frame = CGRect(x: returnX, y: returnY, width: ReturnLabelWidth, height: fixedLabelHeight)
         let webY = returnButton.frame.maxY + border
         let webX = border
         let webWidth = view.bounds.width - 2 * border
@@ -123,7 +133,8 @@ extension HelpController : WKScriptMessageHandler, MFMailComposeViewControllerDe
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         // Handle scripts
         switch message.name {
-            // TODO probably want to support "Tips" here also
+        case ResetTips:
+            tipReset?.reset()
         case SendFeedback:
             if !Feedback.send(appName, dest: email, host: self) {
                 bummer(title: NoEmailTitle, message: NoEmailMessage, host: self)

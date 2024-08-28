@@ -34,7 +34,7 @@ fileprivate let phoneCtlHeight = CGFloat(20)
 fileprivate let reuseIdentifier = "tableDialog"
 
 // The class itself
-open class TableDialogController : UIViewController, UIPopoverPresentationControllerDelegate,  UITableViewDelegate,  UITableViewDataSource {
+open class TableDialogController : PopupViewController, UITableViewDelegate,  UITableViewDataSource {
 
     // State
     public let sectionCount : Int
@@ -51,24 +51,12 @@ open class TableDialogController : UIViewController, UIPopoverPresentationContro
     // Initialized with the owning view, the size, and the anchor point (optionally, direction with a default of .up and section count with a default of 1)
     public init(_ view: UIView, size: CGSize, anchor: CGPoint, direction: UIPopoverArrowDirection = .up, sectionCount: Int = 1) {
         self.sectionCount = sectionCount
-        super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = UIModalPresentationStyle.popover
-        preferredContentSize = size
-        let popoverPC = self.popoverPresentationController
-        popoverPC?.sourceView = view
-        popoverPC?.sourceRect = CGRect(origin: anchor, size: CGSize.zero)
-        popoverPC?.permittedArrowDirections = direction
-        popoverPC?.delegate = self
+        super.init(size, view, CGRect(origin: anchor, size: CGSize.zero), direction)
     }
 
     // Necessary but useless
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // This is neceesary for popover to work on the iPhone
-    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
     }
 
     // Should be closely coordinated with the layout done in viewDidLoad.  This function calculates the approximate height needed to
