@@ -61,6 +61,12 @@ public let TouchableBackground = UIColor(white: 0.8, alpha: 1)
 /* Title for the dismiss button of the "bummer" dialog */
 let BummerButtonTitle = "Bummer"
 
+/* Sound file names and extensions */
+let GameOverSound = "applause"
+let GameOverSoundExt = "wav"
+let ClickSound = "click"
+let ClickSoundExt = "wav"
+
 //
 // Functions (alphabetical)
 //
