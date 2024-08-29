@@ -253,6 +253,12 @@ public func hide(_ ctls: UIView...) {
     }
 }
 
+// Move a path by a given translation distance
+public func movePath(_ path: CGPath, by: CGPoint) -> CGPath? {
+    var transform = CGAffineTransform(translationX: by.x, y: by.y)
+    return path.copy(using: &transform)
+}
+
 // Special packaging of bummer for noting holes in the implementation during development (shouldn't be called in production).
 // To allow it to be called in tight places, it will present on the console if no host is given to present the dialog.
 // If a host is given, the dialog is always attempted but does not always work since the host could be busy with another dialog or
@@ -304,10 +310,29 @@ public func randomOrigin(_ size: CGSize, _ outer: CGRect) -> CGPoint {
     return CGPoint(x: x, y: y)
 }
 
+// Generate a random alphameric string
 public func randomString(length: Int) -> String {
   let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
   return String((0..<length).map{ _ in letters.randomElement()! })
 }
+
+// Rotate a CGPath around zero.
+public func rotatePath(_ path: CGPath, by: CGFloat) -> CGPath? {
+    var transform = CGAffineTransform(rotationAngle: by)
+    return path.copy(using: &transform)
+}
+
+// Rotate one point around another
+public func rotatePoint(_ point: CGPoint, around: CGPoint, by: CGFloat) -> CGPoint {
+    let dx = point.x - around.x
+    let dy = point.y - around.y
+    let radius = sqrt(dx * dx + dy * dy)
+    let azimuth = atan2(dy, dx) + by
+    let x = around.x + radius * cos(azimuth)
+    let y = around.y + radius * sin(azimuth)
+    return CGPoint(x: x, y: y)
+}
+
 
 // Run an sequence of automations provided as an array of functions
 public func runAnimationSequence(_ seq: [()->Void], completion: @escaping ()->Void) {
