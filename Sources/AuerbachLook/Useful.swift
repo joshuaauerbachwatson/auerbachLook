@@ -152,7 +152,7 @@ public func below(_ view: UIView) -> CGFloat {
 }
 
 // Display a dialog with a cancellation button that does nothing and a second button that does something
-func confirmBeforeDoing(host: UIViewController, destructive: Bool, title: String, message: String, doNothing: String, doSomething: String,
+public func confirmBeforeDoing(host: UIViewController, destructive: Bool, title: String, message: String, doNothing: String, doSomething: String,
                         handler: @escaping ()->Void) {
     let ignore = UIAlertAction(title: doNothing, style: .cancel) { _ in
         // Do nothing if this is chosen
@@ -213,7 +213,7 @@ public func getFileSize(_ path: String) -> UInt64? {
 
 // In a given container, for a given prefix, find the first file suffix not corresponding to an existing file.
 // Designed to be called withOUT the optional suffix argument; that is used for recursive calls.
-func findFirstFreeFileName(_ container: URL, _ prefix: String, _ suffix: Int = 1) -> (String, Int) {
+public func findFirstFreeFileName(_ container: URL, _ prefix: String, _ suffix: Int = 1) -> (String, Int) {
     let toTry = container.appendingPathComponent(prefix + String(suffix)).path
     if FileManager.default.fileExists(atPath: toTry) {
         return findFirstFreeFileName(container, prefix, suffix + 1)
