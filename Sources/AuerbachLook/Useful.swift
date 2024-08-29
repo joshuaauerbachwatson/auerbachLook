@@ -151,6 +151,21 @@ public func below(_ view: UIView) -> CGFloat {
     return view.frame.maxY + DialogSpacer
 }
 
+// Display a dialog with a cancellation button that does nothing and a second button that does something
+func confirmBeforeDoing(host: UIViewController, destructive: Bool, title: String, message: String, doNothing: String, doSomething: String,
+                        handler: @escaping ()->Void) {
+    let ignore = UIAlertAction(title: doNothing, style: .cancel) { _ in
+        // Do nothing if this is chosen
+    }
+    let proceed = UIAlertAction(title: doSomething, style: destructive ? .destructive : .default) { _ in
+        handler()
+    }
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    alert.addAction(ignore)
+    alert.addAction(proceed)
+    Logger.logPresent(alert, host: host, animated: true)
+}
+
 // Crop an image to a given rectangle
 public func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
     // A correct cropping requires the image to be in the "up" orientation, so we first assure that.
@@ -194,6 +209,16 @@ public func getFileSize(_ path: String) -> UInt64? {
     let fileAttributes = try? FileManager.default.attributesOfItem(atPath: path)
     let size = fileAttributes?[FileAttributeKey.size]
     return (size as? NSNumber)?.uint64Value
+}
+
+// In a given container, for a given prefix, find the first file suffix not corresponding to an existing file.
+// Designed to be called withOUT the optional suffix argument; that is used for recursive calls.
+func findFirstFreeFileName(_ container: URL, _ prefix: String, _ suffix: Int = 1) -> (String, Int) {
+    let toTry = container.appendingPathComponent(prefix + String(suffix)).path
+    if FileManager.default.fileExists(atPath: toTry) {
+        return findFirstFreeFileName(container, prefix, suffix + 1)
+    }
+    return (toTry, suffix)
 }
 
 // Get the suffix portion of a file name in prefix/suffix form

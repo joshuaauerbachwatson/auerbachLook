@@ -72,8 +72,11 @@ let ClickSoundExt = "wav"
 //
 
 // Display an error message modally, with a single "Bummer" button to dismiss the popup
-public func bummer(title: String, message: String, host: UIViewController) {
-    let action = UIAlertAction(title: BummerButtonTitle, style: .cancel, handler: nil)
+// May have an optional handler to run when the user dismisses the dialog
+public func bummer(title: String, message: String, host: UIViewController, handler: (()->Void)? = nil) {
+    let action = UIAlertAction(title: BummerButtonTitle, style: .cancel) { _ in
+        handler?()
+    }
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     alert.addAction(action)
     Logger.logPresent(alert, host: host, animated: true)
@@ -143,6 +146,20 @@ public func makeLabel(_ color: UIColor, parent: UIView) -> UILabel {
     let label = UILabel()
     configureLabel(label, color, parent: parent)
     return label
+}
+
+// Make a text field configured in the standard way
+func makeTextField(_ color: UIColor, parent: UIView) -> UITextField {
+    let ans = UITextField()
+    configureTextField(ans, color, parent: parent)
+    return ans
+}
+
+// Make a TouchableLabel configured in the standard way
+func makeTouchableLabel(target: AnyObject, action: Selector, parent: UIView, tag: Int = 0) -> TouchableLabel {
+    let ans = TouchableLabel()
+    configureTouchableLabel(ans, target: target, action: action, tag: tag, parent: parent)
+    return ans
 }
 
 // Prompt for a string value using an alert controller
