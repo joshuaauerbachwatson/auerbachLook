@@ -316,6 +316,15 @@ public func randomString(length: Int) -> String {
   return String((0..<length).map{ _ in letters.randomElement()! })
 }
 
+// Resize an image given the original image and a target rectangle
+public func resizeImage(_ original: UIImage, to: CGSize) -> UIImage {
+    UIGraphicsBeginImageContextWithOptions(to, true, 0.0)
+    original.draw(in: CGRect(origin: CGPoint.zero, size: to))
+    let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    return scaledImage ?? original
+}
+
 // Rotate a CGPath around zero.
 public func rotatePath(_ path: CGPath, by: CGFloat) -> CGPath? {
     var transform = CGAffineTransform(rotationAngle: by)
@@ -359,8 +368,8 @@ public func safeAreaOf(_ view: UIView) -> CGRect {
     return view.bounds.inset(by: insets)
 }
 
-// Parse a file name into prefix and suffix form while looking for a particular prefix; useful when scanning a folder for files of a given kind
-// Boolean return aids in chaining when scanning for multiple kinds in a single pass
+// Parse a file name into prefix and suffix form while looking for a particular prefix; useful when scanning a folder for files
+// of a given kind.  Boolean return aids in chaining when scanning for multiple kinds in a single pass.
 @discardableResult
 public func screenFileName(_ file: String, prefix: String, into: inout [Int]) -> Bool {
     if file.hasPrefix(prefix), let suffix = getSuffix(file, prefix.count) {
@@ -368,6 +377,14 @@ public func screenFileName(_ file: String, prefix: String, into: inout [Int]) ->
         return true
     }
     return false
+}
+
+// Alternative to previous screenFileName when not chaining in an iteration
+public func screenFileName(_ file: String, prefix: String) -> Int {
+    if file.hasPrefix(prefix), let suffix = getSuffix(file, prefix.count) {
+        return suffix
+    }
+    return -1
 }
 
 // Provide a shuffled version of an array
