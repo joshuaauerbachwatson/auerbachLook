@@ -30,14 +30,14 @@ extension CGPoint : Hashable {
         hasher.combine(self.x)
         hasher.combine(self.y)
     }
-    var swapped : CGPoint {
+    public var swapped : CGPoint {
         return CGPoint(x: self.y, y: self.x)
     }
 }
 
 /* Also add a swapped member to CGSize */
 extension CGSize {
-    var swapped : CGSize {
+    public var swapped : CGSize {
         return CGSize(width: self.height, height: self.width)
     }
 }
