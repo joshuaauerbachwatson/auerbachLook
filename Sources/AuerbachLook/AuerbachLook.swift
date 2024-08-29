@@ -149,14 +149,14 @@ public func makeLabel(_ color: UIColor, parent: UIView) -> UILabel {
 }
 
 // Make a text field configured in the standard way
-func makeTextField(_ color: UIColor, parent: UIView) -> UITextField {
+public func makeTextField(_ color: UIColor, parent: UIView) -> UITextField {
     let ans = UITextField()
     configureTextField(ans, color, parent: parent)
     return ans
 }
 
 // Make a TouchableLabel configured in the standard way
-func makeTouchableLabel(target: AnyObject, action: Selector, parent: UIView, tag: Int = 0) -> TouchableLabel {
+public func makeTouchableLabel(target: AnyObject, action: Selector, parent: UIView, tag: Int = 0) -> TouchableLabel {
     let ans = TouchableLabel()
     configureTouchableLabel(ans, target: target, action: action, tag: tag, parent: parent)
     return ans
