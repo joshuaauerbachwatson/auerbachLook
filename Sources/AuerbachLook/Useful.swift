@@ -24,6 +24,24 @@ fileprivate let DialogSpacer = CGFloat(4)
 // Extensions
 //
 
+/* Make CGPoint hashable, and allow x and y to be swapped */
+extension CGPoint : Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.x)
+        hasher.combine(self.y)
+    }
+    var swapped : CGPoint {
+        return CGPoint(x: self.y, y: self.x)
+    }
+}
+
+/* Also add a swapped member to CGSize */
+extension CGSize {
+    var swapped : CGSize {
+        return CGSize(width: self.height, height: self.width)
+    }
+}
+
 /* Convenient constructor for colors (uses three integers 0-255 for RGB) */
 public extension UIColor {
     convenience init(_ r: Int, _ g: Int, _ b: Int) {
