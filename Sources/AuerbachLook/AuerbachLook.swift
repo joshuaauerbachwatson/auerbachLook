@@ -62,10 +62,10 @@ public let TouchableBackground = UIColor(white: 0.8, alpha: 1)
 let BummerButtonTitle = "Bummer"
 
 /* Sound file names and extensions */
-let GameOverSound = "applause"
-let GameOverSoundExt = "wav"
-let ClickSound = "click"
-let ClickSoundExt = "wav"
+public let GameOverSound = "applause"
+public let GameOverSoundExt = "wav"
+public let ClickSound = "click"
+public let ClickSoundExt = "wav"
 
 //
 // Functions (alphabetical)

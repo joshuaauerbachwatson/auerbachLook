@@ -15,6 +15,7 @@
  */
 
 import UIKit
+import AVFoundation
 
 // Miscellaneous Useful extensions and functions.
 
@@ -272,7 +273,37 @@ public func place(_ view: UIView, _ x: CGFloat, _ y: CGFloat, _ width: CGFloat, 
     return view
 }
 
-// Get a random string of a given length formed from alphanumeric characters
+// Play a sound.  Returns the player, which must be kept long enough to let the sound complete.
+public func playSound(_ name: String, _ ext: String) -> AVAudioPlayer? {
+    guard let url = Bundle.main.url(forResource: name, withExtension: ext) else { return nil }
+    try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
+    try? AVAudioSession.sharedInstance().setActive(true)
+    guard let player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: nil) else { return nil }
+    player.play()
+    return player
+}
+
+// Random Bool
+public func randomBool() -> Bool {
+    return arc4random_uniform(2) == 1
+}
+
+// Random double in the range -1.0...1.0
+public func randomDouble() -> Double {
+    return drand48() * 2.0 - 1.0
+}
+
+// Choose a random origin for a rectangle of a given size to fit entirely inside another rectangle
+public func randomOrigin(_ size: CGSize, _ outer: CGRect) -> CGPoint {
+    let minX = outer.minX
+    let minY = outer.minY
+    let maxX = outer.maxX - size.width
+    let maxY = outer.maxY - size.height
+    let x = minX + drand48() * (maxX - minX)
+    let y = minY + drand48() * (maxY - minY)
+    return CGPoint(x: x, y: y)
+}
+
 public func randomString(length: Int) -> String {
   let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
   return String((0..<length).map{ _ in letters.randomElement()! })
