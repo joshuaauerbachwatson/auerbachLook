@@ -43,6 +43,22 @@ extension CGSize {
     }
 }
 
+// 'Screenshot' initializers for UIImage from CALayer or UIView.  The image is created from the layer's content but does not reflect rotation
+// that might be imparted by its transform.
+extension UIImage {
+    public convenience init(view: UIView) {
+        self.init(layer: view.layer)
+    }
+    public convenience init(layer: CALayer, size: CGSize? = nil) {
+        let sizeToUse = size ?? layer.bounds.size // use bounds, not frame, since frame might reflect a transform that will be ignored by the rendering
+        UIGraphicsBeginImageContext(sizeToUse)
+        layer.render(in:UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.init(cgImage: image!.cgImage!)
+    }
+}
+
 /* Convenient constructor for colors (uses three integers 0-255 for RGB) */
 public extension UIColor {
     convenience init(_ r: Int, _ g: Int, _ b: Int) {
@@ -157,6 +173,18 @@ public func * (_ rect: CGRect, _ scale: CGFloat) -> CGRect {
 //
 // Functions (alphabetical)
 //
+
+// Add a border to an image
+public func addBorder(_ image: UIImage, _ borderSize: CGFloat) -> UIImage {
+    let imageSize = image.size
+    let borderedSize = CGSize(width: imageSize.width + 2 * borderSize, height: imageSize.height + 2 * borderSize)
+    let bordered = UIView(frame: CGRect(origin: CGPoint.zero, size: borderedSize))
+    bordered.backgroundColor = UIColor.black
+    let inner = UIImageView(frame: CGRect(x: borderSize, y: borderSize, width: imageSize.width, height: imageSize.height))
+    inner.image = image
+    bordered.addSubview(inner)
+    return UIImage(view: bordered)
+}
 
 // Convenience for getting the X value to place one view to the right of another (assumes DialogSpacer gives the amount
 // of space
@@ -379,7 +407,7 @@ public func screenFileName(_ file: String, prefix: String, into: inout [Int]) ->
     return false
 }
 
-// Alternative to previous screenFileName when not chaining in an iteration
+// Alternative to previous screenFileName when not chaining in an iterationa
 public func screenFileName(_ file: String, prefix: String) -> Int {
     if file.hasPrefix(prefix), let suffix = getSuffix(file, prefix.count) {
         return suffix
