@@ -309,7 +309,7 @@ public func place(_ view: UIView, _ x: CGFloat, _ y: CGFloat, _ width: CGFloat, 
 
 // Play a sound.  Returns the player, which must be kept long enough to let the sound complete.
 public func playSound(_ name: String, _ ext: String) -> AVAudioPlayer? {
-    guard let url = Bundle.main.url(forResource: name, withExtension: ext) else { return nil }
+    guard let url = Bundle.module.url(forResource: name, withExtension: ext) else { return nil }
     try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
     try? AVAudioSession.sharedInstance().setActive(true)
     guard let player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: nil) else { return nil }
