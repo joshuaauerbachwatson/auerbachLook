@@ -26,7 +26,7 @@ fileprivate let DialogSpacer = CGFloat(4)
 //
 
 /* Make CGPoint hashable, and allow x and y to be swapped */
-extension CGPoint : Hashable {
+extension CGPoint : @retroactive Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.x)
         hasher.combine(self.y)
