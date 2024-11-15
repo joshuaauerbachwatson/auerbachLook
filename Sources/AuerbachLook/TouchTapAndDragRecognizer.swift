@@ -27,9 +27,11 @@ import UIKit.UIGestureRecognizerSubclass
 
 // A small variant on UIPanGestureRecognizer that fires separate closures for touch and tap recognition
 public class TouchTapAndDragRecognizer : UIPanGestureRecognizer {
-    // Closure to call when a touch is recognized.  The closure can activate tap recognition (on touch end) or not as it sees fit.  But note that tap
+    // Closure to call when a touch is recognized.
+    // The closure can activate tap recognition (on touch end) or not as it sees fit.  But note that tap
     // recognition is cancelled if there is any finger movement regardless of what the touch closure decided.
-    // May be omitted.
+    // May be omitted.  If omitted, and a tap recognizer is provided, the tap recognition will be active as
+    // if the touch recognizer returned true.
     let onTouch : ((UITouch) -> Bool)?
 
     // Closure to call when tap is recognized.  May be omitted.
@@ -51,7 +53,7 @@ public class TouchTapAndDragRecognizer : UIPanGestureRecognizer {
     public override func touchesBegan(_ touches: Set<UITouch>, with: UIEvent) {
         super.touchesBegan(touches, with: with)
         if let touch = touches.first {
-            lookForTap = onTouch?(touch) ?? false
+            lookForTap = onTouch?(touch) ?? true
         }
     }
 
