@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-//
-//  TouchTapAndDragRecognizer.swift
-//  Image Match
-//
-//  Created by Joshua Auerbach on 6/6/18.
-//  Copyright © 2018 Joshua Auerbach. All rights reserved.
-//
-
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
