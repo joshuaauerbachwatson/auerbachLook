@@ -60,7 +60,8 @@ public class HelpController: UIViewController {
     }
     
     // Backward compatible init which takes resource name rather than HTML string in first argument
-    convenience init(helpPage: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
+    public convenience init(helpPage: String, email: String, returnText: String, appName: String,
+                            tipReset: TipResetter? = nil) {
         let path = Bundle.main.url(forResource: helpPage, withExtension: HelpExt)!
         guard let html = try? String(contentsOf: path, encoding: .utf8) else {
             Logger.logFatalError("Help file could not be loaded")
