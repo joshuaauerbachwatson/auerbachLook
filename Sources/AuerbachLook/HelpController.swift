@@ -44,19 +44,28 @@ public class HelpController: UIViewController {
     var webView : WKWebView!  // Delayed init (viewDidLoad)
 
     // Arguments are 
-    // - The resource name of the help page to display,
+    // - The HTML to display as Help
     // - The email address to which feedback should be sent.
     // - Text to use in the return button,
     // - The name to use when referring to the app.
     // - (optional) THe TipResetter to invoke when the option to restore tips is selected.
-    public init(helpPage: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
-        self.helpPage = helpPage
+    public init(html: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
+        self.helpPage = html
         self.email = email
         self.returnText = returnText
         self.tipReset = tipReset
         self.appName = appName
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = UIModalPresentationStyle.fullScreen
+    }
+    
+    // Backward compatible init which takes resource name rather than HTML string in first argument
+    convenience init(helpPage: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
+        let path = Bundle.main.url(forResource: helpPage, withExtension: HelpExt)!
+        guard let html = try? String(contentsOf: path, encoding: .utf8) else {
+            Logger.logFatalError("Help file could not be loaded")
+        }
+        self.init(html: html, email: email, returnText: returnText, appName: appName, tipReset: tipReset)
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -85,8 +94,7 @@ public class HelpController: UIViewController {
         webView = WKWebView(frame: CGRect.zero, configuration: config) // Satisfies delayed init
         webView.backgroundColor = HelpTextBackground
         view.addSubview(webView)
-        let path = Bundle.main.url(forResource: helpPage, withExtension: HelpExt)!
-        webView.load(URLRequest(url: path))
+        webView.loadHTMLString(helpPage, baseURL: nil)
     }
 
     // Allow view to be rotated.   We will redo the layout each time while preserving all controller state.
