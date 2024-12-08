@@ -37,7 +37,7 @@ public protocol TipResetter {
 public class HelpController: UIViewController {
     let helpPage : String
     let email : String
-    let returnText : String
+    let returnText : String? // If nil, keeps the Return button from appearing
     let appName : String
     let tipReset : TipResetter?
     let returnButton = UIButton()
@@ -49,7 +49,7 @@ public class HelpController: UIViewController {
     // - Text to use in the return button,
     // - The name to use when referring to the app.
     // - (optional) THe TipResetter to invoke when the option to restore tips is selected.
-    public init(html: String, email: String, returnText: String, appName: String, tipReset: TipResetter? = nil) {
+    public init(html: String, email: String, returnText: String?, appName: String, tipReset: TipResetter? = nil) {
         self.helpPage = html
         self.email = email
         self.returnText = returnText
@@ -60,7 +60,7 @@ public class HelpController: UIViewController {
     }
     
     // Backward compatible init which takes resource name rather than HTML string in first argument
-    public convenience init(helpPage: String, email: String, returnText: String, appName: String,
+    public convenience init(helpPage: String, email: String, returnText: String?, appName: String,
                             tipReset: TipResetter? = nil) {
         let path = Bundle.main.url(forResource: helpPage, withExtension: HelpExt)!
         guard let html = try? String(contentsOf: path, encoding: .utf8) else {
@@ -79,12 +79,14 @@ public class HelpController: UIViewController {
         view.backgroundColor = HelpViewBackground
 
         // Return button
-        returnButton.setTitle(returnText, for: .normal)
-        returnButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        returnButton.backgroundColor = ButtonBackground
-        returnButton.addTarget(self, action: #selector(returnTouched), for: .touchUpInside)
-        returnButton.layer.cornerRadius = 8
-        self.view.addSubview(returnButton)
+        if let returnText = self.returnText {
+            returnButton.setTitle(returnText, for: .normal)
+            returnButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            returnButton.backgroundColor = ButtonBackground
+            returnButton.addTarget(self, action: #selector(returnTouched), for: .touchUpInside)
+            returnButton.layer.cornerRadius = 8
+            self.view.addSubview(returnButton)
+        }
 
         // Web view
         let config = WKWebViewConfiguration()
@@ -120,11 +122,16 @@ public class HelpController: UIViewController {
 
     // Calculate frames for all the subviews based on orientation
     func doLayout() {
-        let returnY = safeAreaOf(view).minY + border
-        let returnX = view.bounds.width / CGFloat(2) - ReturnLabelWidth / 2
-        returnButton.frame = CGRect(x: returnX, y: returnY, width: ReturnLabelWidth, height: fixedLabelHeight)
-        let webY = returnButton.frame.maxY + border
         let webX = border
+        let webY: CGFloat
+        if returnText != nil {
+            let returnY = safeAreaOf(view).minY + border
+            let returnX = view.bounds.width / CGFloat(2) - ReturnLabelWidth / 2
+            returnButton.frame = CGRect(x: returnX, y: returnY, width: ReturnLabelWidth, height: fixedLabelHeight)
+            webY = returnButton.frame.maxY + border
+        } else {
+            webY = safeAreaOf(view).minY + border
+        }
         let webWidth = view.bounds.width - 2 * border
         let webHeight = view.bounds.maxY - border - webY
         webView.frame = CGRect(x: webX, y: webY, width: webWidth, height: webHeight)
