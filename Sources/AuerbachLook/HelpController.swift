@@ -35,7 +35,8 @@ public protocol TipResetter {
 }
 
 public class HelpController: UIViewController {
-    let helpPage : String
+    let helpPage : String // The HTML contents, not a resource name
+    let baseURL: URL      // THe URL to use as a base
     let email : String
     let returnText : String? // If nil, keeps the Return button from appearing
     let appName : String
@@ -45,16 +46,18 @@ public class HelpController: UIViewController {
 
     // Arguments are 
     // - The HTML to display as Help
+    // - The URL to use as a base
     // - The email address to which feedback should be sent.
-    // - Text to use in the return button,
+    // - Text to use in the return button (if empty, the entire return button is omitted),
     // - The name to use when referring to the app.
     // - (optional) THe TipResetter to invoke when the option to restore tips is selected.
-    public init(html: String, email: String, returnText: String?, appName: String, tipReset: TipResetter? = nil) {
+    public init(html: String, baseURL: URL, email: String, returnText: String?, appName: String, tipReset: TipResetter? = nil) {
         self.helpPage = html
         self.email = email
         self.returnText = returnText
         self.tipReset = tipReset
         self.appName = appName
+        self.baseURL = baseURL
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = UIModalPresentationStyle.fullScreen
     }
@@ -66,7 +69,7 @@ public class HelpController: UIViewController {
         guard let html = try? String(contentsOf: path, encoding: .utf8) else {
             Logger.logFatalError("Help file could not be loaded")
         }
-        self.init(html: html, email: email, returnText: returnText, appName: appName, tipReset: tipReset)
+        self.init(html: html, baseURL: path, email: email, returnText: returnText, appName: appName, tipReset: tipReset)
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -97,7 +100,7 @@ public class HelpController: UIViewController {
         webView = WKWebView(frame: CGRect.zero, configuration: config) // Satisfies delayed init
         webView.backgroundColor = HelpTextBackground
         view.addSubview(webView)
-        webView.loadHTMLString(helpPage, baseURL: nil)
+        webView.loadHTMLString(helpPage, baseURL: baseURL)
     }
 
     // Allow view to be rotated.   We will redo the layout each time while preserving all controller state.
