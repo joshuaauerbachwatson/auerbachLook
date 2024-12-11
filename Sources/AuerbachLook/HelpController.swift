@@ -36,7 +36,7 @@ public protocol TipResetter {
 
 public class HelpController: UIViewController {
     let helpPage : String // The HTML contents, not a resource name
-    let baseURL: URL      // THe URL to use as a base
+    let baseURL: URL?     // THe URL to use as a base (may be nil if helpPage is self-contained)
     let email : String
     let returnText : String? // If nil, keeps the Return button from appearing
     let appName : String
@@ -46,12 +46,13 @@ public class HelpController: UIViewController {
 
     // Arguments are 
     // - The HTML to display as Help
-    // - The URL to use as a base
+    // - The URL to use as a base (may be nil if HTML is self-contained)
     // - The email address to which feedback should be sent.
     // - Text to use in the return button (if empty, the entire return button is omitted),
     // - The name to use when referring to the app.
     // - (optional) THe TipResetter to invoke when the option to restore tips is selected.
-    public init(html: String, baseURL: URL, email: String, returnText: String?, appName: String, tipReset: TipResetter? = nil) {
+    public init(html: String, baseURL: URL?, email: String, returnText: String?, appName: String,
+                tipReset: TipResetter? = nil) {
         self.helpPage = html
         self.email = email
         self.returnText = returnText
