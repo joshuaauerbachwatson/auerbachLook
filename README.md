@@ -12,5 +12,5 @@ The name `auerbachLook` sounds UI-oriented but some of the sources here are abou
 
 - **Razor Puzzle** (in the app store but not open source)
 - **anyCards** (open source but not in the app store)
-- **Unigame-Core** (not an app, but another library, under development).  Open source
+- **unigame** (not an app, but another library, under development).  Open source
 - **Image Match** (this was in the app store but has been withdrawn because Apple requested updates and I didn't want to spend time on them).  It is not open source and does not directly use `AuerbachLook` but contains older versions of some of the sources.
