@@ -274,10 +274,10 @@ public func getSuffix(_ file: String, _ prefixLen: Int) -> Int? {
     return Int(file.suffix(from: indexFrom))
 }
 
-// Hide some controls
-public func hide(_ ctls: UIView...) {
+// Hide some controls.  For added flexibility, controls may be nil
+public func hide(_ ctls: UIView?...) {
     for ctl in ctls {
-        ctl.isHidden = true
+        ctl?.isHidden = true
     }
 }
 
@@ -427,9 +427,9 @@ public func shuffle<T>(_ array : [T]) -> [T] {
     return ans
 }
 
-// Unhide some controls
-public func unhide(_ ctls: UIView...) {
+// Unhide some controls.  For added flexibility, controls may be nil.
+public func unhide(_ ctls: UIView?...) {
     for ctl in ctls {
-        ctl.isHidden = false
+        ctl?.isHidden = false
     }
 }
