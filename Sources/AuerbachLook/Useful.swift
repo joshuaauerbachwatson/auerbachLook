@@ -19,8 +19,6 @@ import AVFoundation
 
 // Miscellaneous Useful extensions and functions.
 
-fileprivate let DialogSpacer = CGFloat(4)
-
 //
 // Extensions
 //
@@ -186,16 +184,16 @@ public func addBorder(_ image: UIImage, _ borderSize: CGFloat) -> UIImage {
     return UIImage(view: bordered)
 }
 
-// Convenience for getting the X value to place one view to the right of another (assumes DialogSpacer gives the amount
-// of space
-public func after(_ view: UIView) -> CGFloat {
-    return view.frame.maxX + DialogSpacer
+// Convenience for getting the X value to place one view to the right of another.  The optional
+// gap argument gives the amount of space between, defaulting to DialogSpacer.
+public func after(_ view: UIView, gap: CGFloat = DialogSpacer) -> CGFloat {
+    return view.frame.maxX + gap
 }
 
-// Conveniece for getting the Y value to place one view below another (assumes DialogSpacer gives the amount of space
-// between views)
-public func below(_ view: UIView) -> CGFloat {
-    return view.frame.maxY + DialogSpacer
+// Conveniece for getting the Y value to place one view below another.  The optional
+// gap argument gives the amount of space between, defaulting to DialogSpacer.
+public func below(_ view: UIView, gap: CGFloat = DialogSpacer) -> CGFloat {
+    return view.frame.maxY + gap
 }
 
 // Display a dialog with a cancellation button that does nothing and a second button that does something
@@ -228,6 +226,9 @@ public func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
     let ans = UIImage(cgImage: newcgi, scale: scale, orientation: .up)
     return ans
 }
+
+// Constant used by the below and after functions as the default gap value.
+public let DialogSpacer = CGFloat(4)
 
 // Ensure that an image is in the "up" orientation by redrawing it if not
 public func ensureUpOrientation(_ image: UIImage)->UIImage {
