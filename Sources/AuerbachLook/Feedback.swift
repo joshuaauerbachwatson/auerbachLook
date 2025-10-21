@@ -27,15 +27,20 @@ prefer to delete the logs it is your call.
 """
 
 public class Feedback {
-    // Send feedback.  Return true if mail is enabled on this platform (not a guarantee that mail was sent, since that is
-    // actually up to the user).
-    // The arguments are the app name, the mail destination, and a hosting view controller, which much also implement
-    // the delegate function.  It is up to the host to dismiss the view.
-    public static func send(_ appName: String, dest: String, host: UIViewController & MFMailComposeViewControllerDelegate)
-    -> Bool {
+    // Send feedback.  Return true if mail is enabled on this platform and the email client was opened
+    //    (not a guarantee that mail was sent, since sending is actually up to the user).
+    // The arguments are
+    //     the app name
+    //     the mail destination
+    //     a hosting view controller
+    //     a mail composer delegate
+    // The host and the delegate may be the same object.
+    // It is up to the host to dismiss the view.
+    public static func send(_ appName: String, dest: String, host: UIViewController,
+                            delegate: MFMailComposeViewControllerDelegate) -> Bool {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
-            mail.mailComposeDelegate = host
+            mail.mailComposeDelegate = delegate
             mail.setToRecipients([dest])
             let messageBody = String(format: FeedbackMessageTemplate, appName)
             mail.setMessageBody(messageBody, isHTML: true)

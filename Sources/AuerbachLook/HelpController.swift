@@ -157,7 +157,7 @@ extension HelpController : WKScriptMessageHandler, MFMailComposeViewControllerDe
             tipReset?.reset()
         case SendFeedback:
             if let email {
-                if !Feedback.send(appName, dest: email, host: self) {
+                if !Feedback.send(appName, dest: email, host: self, delegate: self) {
                     bummer(title: NoEmailTitle, message: NoEmailMessage, host: self)
                 }
             }
