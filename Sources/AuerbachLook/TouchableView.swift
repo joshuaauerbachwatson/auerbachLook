@@ -51,8 +51,10 @@ open class TouchableView<View: UIView> : UIView {
         button.addAction(action, for: .primaryActionTriggered)
     }
     
-    public override func addInteraction(_ interaction: any UIInteraction) {
-        button.addInteraction(interaction)
+    @available(iOS 14.0, *)
+    public func setContextMenu(_ menu: UIMenu) {
+        button.menu = menu
+        button.showsMenuAsPrimaryAction = false
     }
     
     public required init?(coder aDecoder: NSCoder) {
