@@ -16,7 +16,8 @@
 
 import UIKit
 
-// Pairs a transparent button with a view, making the view touchable without the complexity of an explicit gesture recognizer
+// Pairs a transparent button with a view, making the view touchable without the complexity of an
+// explicit gesture recognizer
 
 open class TouchableView<View: UIView> : UIView {
     public let view : View
@@ -39,10 +40,19 @@ open class TouchableView<View: UIView> : UIView {
     }
 
     public func addTarget(target: AnyObject, action: Selector, tag: Int = 0) {
-        button.addTarget(target, action: action, for: .touchUpInside)
+        button.addTarget(target, action: action, for: .primaryActionTriggered)
         button.tag = tag
         view.tag = tag
         self.tag = tag
+    }
+    
+    @available(iOS 14.0, *)
+    public func addAction(action: UIAction, tag: Int = 0) {
+        button.addAction(action, for: .primaryActionTriggered)
+    }
+    
+    public override func addInteraction(_ interaction: any UIInteraction) {
+        button.addInteraction(interaction)
     }
     
     public required init?(coder aDecoder: NSCoder) {

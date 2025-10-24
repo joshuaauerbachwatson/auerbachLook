@@ -82,19 +82,29 @@ public func bummer(title: String, message: String, host: UIViewController, handl
     Logger.logPresent(alert, host: host, animated: true)
 }
 
-// Configure a button given a title and action and add it to a view
-public func configureButton(_ button: UIButton, title: String, target: AnyObject, action: Selector, parent: UIView) {
+// Configure a button given a title and target/action pair and add it to a view
+public func configureButton(_ button: UIButton, title: String, target: AnyObject, action: Selector,
+                            parent: UIView) {
     button.setTitle(title, for: .normal)
     button.titleLabel?.adjustsFontSizeToFitWidth = true
     button.titleLabel?.font = getTextFont()
     button.backgroundColor = ButtonBackground
-    button.addTarget(target, action: action, for: .touchUpInside)
+    button.addTarget(target, action: action, for: .primaryActionTriggered)
     button.layer.cornerRadius = 8
     parent.addSubview(button)
 }
 
-// Configure a label with a given a background color.  Text alignment is always centered and the initial text color
-// 'normal'.  Sdds the label to a view
+// Configure a button given a UIAction which becomes its primary action (requires iOS 14)
+@available(iOS 14.0, *)
+public func configureButton(_ button: UIButton, action: UIAction, parent: UIView) {
+    button.backgroundColor = ButtonBackground
+    button.addAction(action, for: .primaryActionTriggered)
+    button.layer.cornerRadius = 8
+    parent.addSubview(button)
+}
+
+// Configure a label with a given a background color.  Text alignment is always centered and the
+// initial text color 'normal'.  Adds the label to a view
 public func configureLabel(_ label: UILabel, _ color: UIColor, parent: UIView) {
     label.backgroundColor = color
     label.textColor = NormalTextColor
@@ -115,13 +125,27 @@ public func configureTextField(_ ans: UITextField, _ color: UIColor, parent: UIV
     parent.addSubview(ans)
 }
 
-// Configure a TouchableLabel given a background color and an action.  Add to a view
-public func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, action: Selector, tag: Int = 0, parent: UIView) {
+// Configure a TouchableLabel given a background color and an action.  Add to a view.
+// The behavior when touched is defined by a target/action pair
+public func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, action: Selector,
+                                    tag: Int = 0, parent: UIView) {
     ans.view.backgroundColor = TouchableBackground
     ans.view.textColor = TouchableTextColor
     ans.view.textAlignment = .center
     ans.view.adjustsFontSizeToFitWidth = true
     ans.addTarget(target: target, action: action, tag: tag)
+    parent.addSubview(ans)
+}
+
+// Configure a TouchableLabel given a background color and an action.  Add to a view.
+// The behavior when touched is defined by a UIAction
+@available(iOS 14.0, *)
+public func configureTouchableLabel(_ ans: TouchableLabel, action: UIAction, tag: Int = 0, parent: UIView) {
+    ans.view.backgroundColor = TouchableBackground
+    ans.view.textColor = TouchableTextColor
+    ans.view.textAlignment = .center
+    ans.view.adjustsFontSizeToFitWidth = true
+    ans.addAction(action: action, tag: tag)
     parent.addSubview(ans)
 }
 
@@ -132,19 +156,21 @@ public func configureStepper(_ stepper: Stepper, delegate: StepperDelegate, valu
     parent.addSubview(stepper)
 }
 
-// Compute a good anchor point and preferred size for popup dialogs with top arrows.  The anchor will be given in main
-// view coordinates.
+// Compute a good anchor point and preferred size for popup dialogs with top arrows.  The anchor will be
+// given in main view coordinates.
 //   Inputs are:
 //     The initiating subview.
-//     The ideal preferred size.  The width must be able to fit on all screens and will not be reduced in the answer.  The
-//        height may be reduced in the answer if necessary.
-//     The bounds of the main view
-//   The function attempts to place the anchor on the center of the bottom edge of the initiating view.  If that anchor 
-//        would require the popup's height to be reduced, then the anchor is moved to (midX, minY) of the main view's bounds
-//        and the returned height is either the requested height or the best height we can obtain.  Otherwise (height ok), if
-//        any part of the X dimension of the popup would be off the screen or leave less than 'border' pixels at either edge,
-//        the function moves the x of the anchor the minimal distance left or right to keep this from happening.
-public func getDialogAnchorAndSize(_ initiator: UIView, _ size: CGSize, _ bounds: CGRect) -> (CGPoint, CGSize) {
+//     The ideal preferred size.  The width must be able to fit on all screens and will not be reduced in
+//        the answer.  The height may be reduced in the answer if necessary.
+//     The main view's bounds.
+//   The function attempts to place the anchor on the center of the bottom edge of the initiating view.
+//        If that anchor would require the popup's height to be reduced, then the anchor is moved to
+//        (midX, minY) of the main view's bounds and the returned height is either the requested height or
+//        the best height we can obtain.  Otherwise (height ok), if any part of the X dimension of the popup
+//        would be off the screen or leave less than 'border' pixels at either edge, the function moves the
+//        x of the anchor the minimal distance left or right to keep this from happening.
+public func getDialogAnchorAndSize(_ initiator: UIView, _ size: CGSize, _ bounds: CGRect)
+        -> (CGPoint, CGSize) {
     var y = initiator.frame.maxY
     var x : CGFloat
     if y + size.height > bounds.maxY {
@@ -168,8 +194,8 @@ public func getDialogAnchorAndSize(_ initiator: UIView, _ size: CGSize, _ bounds
     return (anchor, CGSize(width: size.width, height: maxHeight))
 }
 
-// Get the appropriate font to use in a label, based on a base font size which is good for iPads.  Phones use a reduced font based on the
-// ratio of their shortest dimension to the iPad's shortest dimension.
+// Get the appropriate font to use in a label, based on a base font size which is good for iPads.
+// Phones use a reduced font based on the ratio of their shortest dimension to the iPad's shortest dimension.
 public func getTextFont() -> UIFont {
     let bounds = UIScreen.main.bounds
     let shortDimension = bounds.width < bounds.height ? bounds.width : bounds.height
@@ -192,7 +218,8 @@ public func makeTextField(_ color: UIColor, parent: UIView) -> UITextField {
 }
 
 // Make a TouchableLabel configured in the standard way
-public func makeTouchableLabel(target: AnyObject, action: Selector, parent: UIView, tag: Int = 0) -> TouchableLabel {
+public func makeTouchableLabel(target: AnyObject, action: Selector, parent: UIView, tag: Int = 0)
+        -> TouchableLabel {
     let ans = TouchableLabel()
     configureTouchableLabel(ans, target: target, action: action, tag: tag, parent: parent)
     return ans
