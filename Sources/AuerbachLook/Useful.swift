@@ -129,6 +129,19 @@ public extension CGRect {
     }
 }
 
+// Allow any UIResponder to find its UIViewController
+public extension UIResponder {
+    var controller: UIViewController? {
+        if let vc = self as? UIViewController {
+            return vc
+        }
+        guard let next else {
+            return nil
+        }
+        return next.controller
+    }
+}
+
 //
 // Operators
 //
