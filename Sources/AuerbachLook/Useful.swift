@@ -130,13 +130,14 @@ public extension CGRect {
 }
 
 // Allow any UIResponder to find its UIViewController
+// Issues fatal error if there is none
 public extension UIResponder {
-    var controller: UIViewController? {
+    var controller: UIViewController {
         if let vc = self as? UIViewController {
             return vc
         }
         guard let next else {
-            return nil
+            Logger.logFatalError("Unable to find UIViewController for UIResponder")
         }
         return next.controller
     }
