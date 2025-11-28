@@ -29,7 +29,7 @@ fileprivate let pickerBackground = UIColor.white
 fileprivate let expectedWidth = CGFloat(300)
 fileprivate let margin = CGFloat(10)
 fileprivate let spacing = CGFloat(6)
-fileprivate let tabletCtlHeight = CGFloat(40)
+fileprivate let tabletCtlHeight = CGFloat(30)
 fileprivate let phoneCtlHeight = CGFloat(20)
 fileprivate let reuseIdentifier = "tableDialog"
 
