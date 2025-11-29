@@ -164,29 +164,32 @@ public func configureStepper(_ stepper: Stepper, delegate: StepperDelegate, valu
 //        the answer.  The height may be reduced in the answer if necessary.
 //     The main view's bounds.
 //   The function attempts to place the anchor on the center of the bottom edge of the initiating view.
-//        If that anchor would require the popup's height to be reduced, then the anchor is moved to
-//        (midX, minY) of the main view's bounds and the returned height is either the requested height or
-//        the best height we can obtain.  Otherwise (height ok), if any part of the X dimension of the popup
-//        would be off the screen or leave less than 'border' pixels at either edge, the function moves the
-//        x of the anchor the minimal distance left or right to keep this from happening.
-public func getDialogAnchorAndSize(_ initiator: UIView, _ size: CGSize, _ bounds: CGRect)
-        -> (CGPoint, CGSize) {
+//        If that anchor would require the popup's height to be reduced, then the anchor's y value is changed
+//        to the top of the main view, attempting to keep the x position the same.  The returned height is
+//        either the requested height or the best height we can obtain.
+//        Meanwhile, if any part of the X dimension of the popup would be off the screen or leave less than
+//        'border' pixels at either edge, the function moves the x of the anchor the minimal distance left
+//        or right to keep this from happening.
+public func getDialogAnchorAndSize(_ initiator: UIView, _ size: CGSize, _ bounds: CGRect)->(CGPoint, CGSize) {
+    // Initially set x and y to center of bottom edge
     var y = initiator.frame.maxY
-    var x : CGFloat
+    var x = initiator.frame.midX
+    // Check whether x needs to be adjusted and adjust it to keep the dialog on the screen
+    let halfWidth = size.width / 2
+    let maxX = bounds.maxX - border
+    if (x - halfWidth) < border {
+        x = border + halfWidth
+    } else if (x + halfWidth) > maxX {
+        x = maxX - halfWidth
+    }
+    // Now check whether y needs to be adjusted to keep the bottom from going off the screen
+    // If so, shift to the top edge
     if y + size.height > bounds.maxY {
         y = bounds.minY
-        x = bounds.midX
-    } else {
-        let halfWidth = size.width / 2
-        let maxX = bounds.maxX - border
-        x = initiator.center.x
-        if (x - halfWidth) < border {
-            x = border + halfWidth
-        } else if (x + halfWidth) > maxX {
-            x = maxX - halfWidth
-        }
     }
+    // We now have the anchor
     let anchor = CGPoint(x: x, y: y)
+    // Reduce the size if necessary
     let maxHeight = bounds.maxY - y
     if (size.height <= maxHeight) {
         return (anchor, size)
