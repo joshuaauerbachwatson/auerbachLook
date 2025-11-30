@@ -143,6 +143,17 @@ public extension UIResponder {
     }
 }
 
+// Allow a view controller to find the topmost view controller
+public extension UIViewController {
+    var topViewController: UIViewController {
+        var ans = self
+        while let next = ans.presentedViewController {
+            ans = next
+        }
+        return ans
+    }
+}
+
 //
 // Operators
 //
