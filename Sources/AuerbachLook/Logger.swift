@@ -93,6 +93,17 @@ public class Logger {
         FileManager.default.createFile(atPath: crashFile, contents: Data())
         fatalError(message)
     }
+    
+    // Indicates whether a crash occurred since the last time this predicate was interrogated.
+    // Also removes the crash marker.
+    public static var crashed: Bool {
+        let crashFile = getDocDirectory().appendingPathComponent(CrashFileName).path
+        if FileManager.default.fileExists(atPath: crashFile) {
+            try? FileManager.default.removeItem(atPath: crashFile)
+            return true
+        }
+        return false
+    }
 
     // Log the presentation of one view controller by another (performs the presentation also)
     public static func logPresent(_ presented: UIViewController, host: UIViewController, animated: Bool) {
