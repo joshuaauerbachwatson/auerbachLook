@@ -16,23 +16,26 @@
 
 import UIKit
 
-// Class to manage a simple logging facility (to disk).  The emphasis is on simple low-volume logging with the fewest possible frills.
+// Class to manage a simple logging facility (to disk).  The emphasis is on simple low-volume logging with
+// the fewest possible frills.
 
 // The 'log' method exists in two forms:
-//      1.  To open the log on a specific path use openLog(String)->FileHandle?
-//          To log to the resulting handle use log(FileHandle, String).
-//      2.  The alternate log(String) caches the filehandle in a static variable and assume a specific naming scheme (and capacity limit).
-//             There is no public 'open' method in this case.
+//   1.  To open the log on a specific path use openLog(String)->FileHandle?
+//       To log to the resulting handle use log(FileHandle, String).
+//   2.  The alternate log(String) caches the filehandle in a static variable and assume a specific
+//       naming scheme (and capacity limit).  There is no public 'open' method in this case.
 
-// Implicit logging with the standard naming is recommended for apps.  The alternative can be used by app extensions to store the log in a shared container.
+// Implicit logging with the standard naming is recommended for apps.  The alternative can be used by app
+// extensions to store the log in a shared container.
 
-// Also includes some useful global functions packaged here rather than in "Useful" because they are used here or in app extensions (and Useful has stuff
-// that's hard to incorporate into app extensions).
+// Also includes some useful global functions packaged here rather than in "Useful" because they are used
+// here or in app extensions (and Useful has stuff that's hard to incorporate into app extensions).
 public class Logger {
     private init() {} // All static
 
     // Constants
     public static let LogPrefix = "log"
+    public static let CrashFileName = "crashed"
     private static let LogThreshhold : UInt64 = 1024 * 1024
     private static let KeepThreshhold = 8
     private static let LogOpenAnomalyTemplate = "Unable to open the log at %@"
@@ -77,13 +80,17 @@ public class Logger {
 
     // Log the dismissal of one view controller by another (performs the dismissal also)
     public static func logDismiss(_ dismissed: UIViewController, host: UIViewController, animated: Bool) {
-        log("Dismissing " + String(describing: type(of: dismissed)) + ", returning to " + String(describing: type(of: host)))
+        log("Dismissing " + String(describing: type(of: dismissed)) + ", returning to " +
+            String(describing: type(of: host)))
         host.dismiss(animated: animated)
     }
 
-    // Log a message to the implicit log for a fatal error and then call fatalError
+    // Log a message to the implicit log for a fatal error.  Then indicate a crash by storing a marker
+    // in the document directory.  Finally, call fatalError to terminate the process.
     public static func logFatalError(_ message: String) -> Never {
         log("Fatal Error: " + message)
+        let crashFile = getDocDirectory().appendingPathComponent(CrashFileName).path
+        FileManager.default.createFile(atPath: crashFile, contents: Data())
         fatalError(message)
     }
 
@@ -93,7 +100,8 @@ public class Logger {
         host.present(presented, animated: animated)
     }
 
-    // Open a log to a specific location.  This can fail silently if the file doesn't exist, and it is up to the caller to handle that case.
+    // Open a log to a specific location.  This can fail silently if the file doesn't exist, and it
+    // is up to the caller to handle that case.
     public static func openLog(_ path: String) -> FileHandle? {
         if let handle = FileHandle(forWritingAtPath: path) {
             handle.seekToEndOfFile()
@@ -103,7 +111,8 @@ public class Logger {
         }
     }
 
-    // Get the indices of all logs that exist, newest first.  This is helpful when preparing to transmit a problem report
+    // Get the indices of all logs that exist, newest first.  This is helpful when preparing to transmit
+    // a problem report
     public static func getAllLogIndices() -> [Int] {
         var logs = [Int]()
         let allFiles = (try? FileManager.default.contentsOfDirectory(atPath: getDocDirectory().path)) ?? []
@@ -142,10 +151,12 @@ public class Logger {
             fmgr.createFile(atPath: logPath, contents: nil)
         } else {
 
-            // Otherwise, check the size of the newest log.  If we're unable to determine the size we just proceed to reuse but we put an entry in the log
-            // saying that we had this anomaly.  It seems better to reuse rather than not, because not reusing will result in one log per session and
-            // potentially not enough retained information.  Reusing runs the risk that "some day" the one used log becomes too large, but that can only
-            // happen if there are no other occasions to look at it and see that file size determination is failing.
+            // Otherwise, check the size of the newest log.  If we're unable to determine the size we just
+            // proceed to reuse but we put an entry in the log saying that we had this anomaly.  It seems
+            // better to reuse rather than not, because not reusing will result in one log per session and
+            // potentially not enough retained information.  Reusing runs the risk that "some day" the one
+            // used log becomes too large, but that can only happen if there are no other occasions to look
+            // at it and see that file size determination is failing.
             logPath = makeLogPath(logs[0])
             let fileSize = getFileSize(logPath)
             if (fileSize ?? 0) > LogThreshhold {
@@ -158,9 +169,11 @@ public class Logger {
                 return handle
             }
         }
-        // LogPath now contains the path to use and the file either pre-existed or was just created (therefore, exists with high probability)
+        // LogPath now contains the path to use and the file either pre-existed or was just created
+        // (therefore, exists with high probability)
 
-        // Open the log.  It's weird for this to fail having come this far, but possible, at least in theory.  We print a message in that case.
+        // Open the log.  It's weird for this to fail having come this far, but possible, at least in
+        // theory.  We print a message in that case.
         if let handle = openLog(logPath) {
             log(handle, OpenMessage)
             return handle
