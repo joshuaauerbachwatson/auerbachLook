@@ -20,31 +20,42 @@ import MessageUI
 // Utility to send feedback, possibly including logs
 
 fileprivate let FeedbackSubjectTemplate = "%@ Feedback"
+fileprivate let CrashSubjectTemplate = "%@ Crash Report"
+
 fileprivate let FeedbackMessageTemplate = """
-Replace this text with your specific feedback.   If you are reporting a problem, it is best to leave any log attachments
-in place; they are transcripts of events that occurred in %@ games and will help in diagnosing the problem.  If you
-prefer to delete the logs it is your call.
+Replace this text with your specific feedback.   If you are reporting a problem, it is best to leave any 
+log attachments in place; they are transcripts of events that occurred in %@ games and will help in diagnosing
+the problem.  If you prefer to delete the logs it is your call.
+"""
+
+fileprivate let CrashMessageTemplate = """
+Replace this text with a description of what you were doing at the moment of the crash.
+Leave the log attachments in place; they are needed to diagnose the crash.  They are transcripts
+of events that occurred in %@ games leading up to the crash but do not include personal data.
 """
 
 public class Feedback {
     // Send feedback.  Return true if mail is enabled on this platform and the email client was opened
-    //    (not a guarantee that mail was sent, since sending is actually up to the user).
+    //    (not a guarantee that mail was sent, since sending is actually up to the user).  The delegate
+    //    can determine whether email was actually sent.
     // The arguments are
     //     the app name
     //     the mail destination
     //     a hosting view controller
-    //     a mail composer delegate
-    // The host and the delegate may be the same object.
-    // It is up to the host to dismiss the view.
+    //     a mail composer delegate (may be the same object as host)
+    //     optional flag indicating that the feedback is a crash report
+    // It is up to the delegate to dismiss the view and record the outcome.
     public static func send(_ appName: String, dest: String, host: UIViewController,
-                            delegate: MFMailComposeViewControllerDelegate) -> Bool {
+                            delegate: MFMailComposeViewControllerDelegate, isCrash: Bool = false) -> Bool {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = delegate
             mail.setToRecipients([dest])
-            let messageBody = String(format: FeedbackMessageTemplate, appName)
+            let messageTemplate = isCrash ? CrashMessageTemplate : FeedbackMessageTemplate
+            let subjectTemplate = isCrash ? CrashSubjectTemplate : FeedbackSubjectTemplate
+            let messageBody = String(format: messageTemplate, appName)
             mail.setMessageBody(messageBody, isHTML: true)
-            let subject = String(format: FeedbackSubjectTemplate, appName)
+            let subject = String(format: subjectTemplate, appName)
             mail.setSubject(subject)
             let logs = Logger.getAllLogIndices()
             if logs.count > 0 {
