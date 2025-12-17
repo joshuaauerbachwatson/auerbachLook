@@ -79,10 +79,11 @@ public class Logger {
     }
 
     // Log the dismissal of one view controller by another (performs the dismissal also)
-    public static func logDismiss(_ dismissed: UIViewController, host: UIViewController, animated: Bool) {
+    public static func logDismiss(_ dismissed: UIViewController, host: UIViewController,
+                                  animated: Bool, completion: (()->Void)? = nil) {
         log("Dismissing " + String(describing: type(of: dismissed)) + ", returning to " +
             String(describing: type(of: host)))
-        host.dismiss(animated: animated)
+        host.dismiss(animated: animated, completion: completion)
     }
 
     // Log a message to the implicit log for a fatal error.  Then indicate a crash by storing a marker
@@ -106,9 +107,10 @@ public class Logger {
     }
 
     // Log the presentation of one view controller by another (performs the presentation also)
-    public static func logPresent(_ presented: UIViewController, host: UIViewController, animated: Bool) {
+    public static func logPresent(_ presented: UIViewController, host: UIViewController,
+                                  animated: Bool, completion: (()->Void)? = nil) {
         log("Presenting " + String(describing: type(of: presented)))
-        host.present(presented, animated: animated)
+        host.present(presented, animated: animated, completion: completion)
     }
 
     // Open a log to a specific location.  This can fail silently if the file doesn't exist, and it
