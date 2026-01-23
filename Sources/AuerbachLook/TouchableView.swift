@@ -100,4 +100,13 @@ public class TouchableLabel : TouchableView<UILabel> {
             view.text = newValue
         }
     }
+    
+    public var attributedText: NSAttributedString? {
+        get {
+            return view.attributedText
+        }
+        set {
+            view.attributedText = newValue
+        }
+    }
 }
