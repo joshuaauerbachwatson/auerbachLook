@@ -31,7 +31,7 @@ private let expectedWidth = CGFloat(300)
 private let margin = CGFloat(10)
 private let spacing = CGFloat(6)
 private let tabletCtlHeight = CGFloat(30)
-private let phoneCtlHeight = CGFloat(15)
+private let phoneCtlHeight = CGFloat(20)
 private let reuseIdentifier = "tableDialog"
 
 // The class itself
