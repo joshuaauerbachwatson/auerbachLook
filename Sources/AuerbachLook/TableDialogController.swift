@@ -16,8 +16,9 @@
 
 import UIKit
 
-// Base class for popover dialogs that make choices from items in a simple table view.   Sections are supported
-// (in "grouped" style) but the implementation is biased toward simple cases with just one section.
+// Base class for popover dialogs that make choices from items in a simple table view.
+// Sections are supported (in "grouped" style) but the implementation is biased toward simple cases
+// with just one section.
 
 // Constants
 fileprivate let headerText = "Tap on a list item to choose it"
@@ -48,8 +49,10 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
         return isPhone ? phoneCtlHeight : tabletCtlHeight
     }
 
-    // Initialized with the owning view, the size, and the anchor point (optionally, direction with a default of .up and section count with a default of 1)
-    public init(_ view: UIView, size: CGSize, anchor: CGPoint, direction: UIPopoverArrowDirection = .up, sectionCount: Int = 1) {
+    // Initialized with the owning view, the size, and the anchor point (optionally, direction with
+    // a default of .up and section count with a default of 1)
+    public init(_ view: UIView, size: CGSize, anchor: CGPoint,
+                direction: UIPopoverArrowDirection = .up, sectionCount: Int = 1) {
         self.sectionCount = sectionCount
         super.init(size, view, CGRect(origin: anchor, size: CGSize.zero), direction)
     }
@@ -59,8 +62,9 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
         fatalError("init(coder:) has not been implemented")
     }
 
-    // Should be closely coordinated with the layout done in viewDidLoad.  This function calculates the approximate height needed to
-    // compactly display a given number of rows.  For convenience it returns a size, not just a height, but the width is statically determined.
+    // Should be closely coordinated with the layout done in viewDidLoad.  This function calculates
+    // the approximate height needed to compactly display a given number of rows.  For convenience it
+    // returns a size, not just a height, but the width is statically determined.
     public class func getPreferredSize(_ rows : Int) -> CGSize {
         let headerY = margin
         let pickerY = headerY + ctlHeight + spacing
@@ -87,7 +91,8 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
 
         // Table View
         let frame = CGRect(x: x, y: pickerY, width: width, height: pickerHeight)
-        picker = UITableView(frame: frame, style: sectionCount > 1 ? .grouped: .plain) // Satisfies delayed init
+        // Satisfies delayed init:
+        picker = UITableView(frame: frame, style: sectionCount > 1 ? .grouped: .plain)
         picker.rowHeight = Self.ctlHeight + spacing
         picker.sectionHeaderHeight = picker.rowHeight
         picker.sectionFooterHeight = 0
@@ -99,24 +104,28 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
         view.addSubview(picker)
     }
 
-    // animate the row selection when view appears.  Specializations provide the row via getCurrentRow()
+    // animate the row selection when view appears.  Specializations provide the row via
+    // getCurrentRow()
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let path = getCurrentPath()
         picker.selectRow(at: path, animated: true, scrollPosition: .none)
     }
 
-    // Conform to requirements of this protocol method.  Specializations do the deletion via deletePath or deleteRow
-    public func tableView(_ tableView: UITableView, commit: UITableViewCell.EditingStyle, forRowAt path: IndexPath) {
+    // Conform to requirements of this protocol method.  Specializations do the deletion via
+    // deletePath or deleteRow
+    public func tableView(_ tableView: UITableView, commit: UITableViewCell.EditingStyle,
+                          forRowAt path: IndexPath) {
         if commit == .delete {
             deletePath(path)
             tableView.deleteRows(at: [path], with: UITableView.RowAnimation.fade)
         } // Ignore insertions for now
     }
 
-    // Conform to requirements of this protocol method.  Specializations initialize the the row text in initializePath
-    // or initializeRow
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    // Conform to requirements of this protocol method.  Specializations initialize the the row text
+    // in initializePath or initializeRow
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
+            -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         if let label = cell.textLabel {
             initializePath(label, indexPath)
@@ -131,17 +140,20 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
         }
     }
 
-    // Implement the optional numberOfSections here to avoid the need for subclasses to worry about it since we need to know
-    // about sections anyway.  Subclasses still need to implement the 'path' methods for multiple sections.
+    // Implement the optional numberOfSections here to avoid the need for subclasses to worry about
+    // it since we need to know about sections anyway.  Subclasses still need to implement the 'path'
+    // methods for multiple sections.
     public func numberOfSections(in tableView: UITableView) -> Int {
         return sectionCount
     }
 
-    // Subclasses must provide real implementations of either the 'row' methods (single section) or the 'path' methods
-    // (multiple sections).  The subclass can omit implementing the "delete" method if (but only if) it sets the table
-    // view not editable.  All must implement tableView:numberOfRowsInSection.
+    // Subclasses must provide real implementations of either the 'row' methods (single section) or
+    // the 'path' methods (multiple sections).  The subclass can omit implementing the "delete"
+    // method if (but only if) it sets the table view not editable.  All must implement
+    // tableView:numberOfRowsInSection.
 
-    // Called when a row is selected.  Returns true to dismiss the dialog, false to handle dismissal separately
+    // Called when a row is selected.  Returns true to dismiss the dialog, false to handle dismissal
+    // separately
     open func rowSelected(_ row: Int) -> Bool {
         Logger.logFatalError("Must implement 'rowSelected'")
     }
@@ -166,9 +178,11 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
         Logger.logFatalError("Must implement 'tableView(_:numberOfRowsInSection:)'")
     }
 
-    // Subclasses must provide overrides of these methods iff using sections (defaults work only for single section case)
+    // Subclasses must provide overrides of these methods iff using sections (defaults work only
+    // for single section case)
 
-    // Called when a path is selected.  Returns true to dismiss the dialog, false to handle dismissal separately
+    // Called when a path is selected.  Returns true to dismiss the dialog, false to handle dismissal
+    // separately
     open func pathSelected(_ path: IndexPath) -> Bool {
         if path.section == 0 {
             return rowSelected(path.row)
