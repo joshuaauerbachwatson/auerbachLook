@@ -21,18 +21,18 @@ import UIKit
 // with just one section.
 
 // Constants
-fileprivate let headerText = "Tap on a list item to choose it"
-fileprivate let backgroundColor = UIColor.lightGray
-fileprivate let headerTextColor = UIColor.white
-fileprivate let headerBackground = UIColor.black
-fileprivate let pickerTextColor = UIColor.black
-fileprivate let pickerBackground = UIColor.white
-fileprivate let expectedWidth = CGFloat(300)
-fileprivate let margin = CGFloat(10)
-fileprivate let spacing = CGFloat(6)
-fileprivate let tabletCtlHeight = CGFloat(30)
-fileprivate let phoneCtlHeight = CGFloat(12)
-fileprivate let reuseIdentifier = "tableDialog"
+private let headerText = "Tap on a list item to choose it"
+private let backgroundColor = UIColor.lightGray
+private let headerTextColor = UIColor.white
+private let headerBackground = UIColor.black
+private let pickerTextColor = UIColor.black
+private let pickerBackground = UIColor.white
+private let expectedWidth = CGFloat(300)
+private let margin = CGFloat(10)
+private let spacing = CGFloat(6)
+private let tabletCtlHeight = CGFloat(30)
+private let phoneCtlHeight = CGFloat(15)
+private let reuseIdentifier = "tableDialog"
 
 // The class itself
 open class TableDialogController : PopupViewController, UITableViewDelegate,  UITableViewDataSource {
@@ -43,8 +43,9 @@ open class TableDialogController : PopupViewController, UITableViewDelegate,  UI
     private var picker : UITableView!  // Delayed init (viewDidLoad)
     private var width = CGFloat(0)  // Will be reset in viewDidLoad
 
-    // Recompute ctlHeight for phones to avoid scrolling issues
-    private static var ctlHeight : CGFloat {
+    // Provides the height of each line.  Override if there are custom layout issues.  The
+    // default assumes a liberal height for tablets and a much narrower one for phones.
+    public static var ctlHeight : CGFloat {
         let isPhone = UIScreen.main.traitCollection.userInterfaceIdiom == .phone
         return isPhone ? phoneCtlHeight : tabletCtlHeight
     }
