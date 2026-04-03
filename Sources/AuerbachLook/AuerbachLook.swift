@@ -16,12 +16,6 @@
 
 import UIKit
 
-// Constants and functions to help get a uniform appearance across various apps
-
-fileprivate let OkButtonTitle = "Ok"
-fileprivate let CancelButtonTitle = "Cancel"
-fileprivate let ConfirmButtonTitle = "Confirm"
-
 //
 // Layout constants
 //
@@ -58,8 +52,10 @@ public let TouchableBackground = UIColor(white: 0.8, alpha: 1)
 // Text constants
 //
 
-/* Title for the dismiss button of the "bummer" dialog */
-let BummerButtonTitle = "Bummer"
+private let BummerButtonTitle = "Bummer"
+private let OkButtonTitle = "Ok"
+private let CancelButtonTitle = "Cancel"
+private let ConfirmButtonTitle = "Confirm"
 
 /* Sound file names and extensions */
 public let GameOverSound = "applause"
@@ -73,8 +69,16 @@ public let ClickSoundExt = "wav"
 
 // Display an error message modally, with a single "Bummer" button to dismiss the popup
 // May have an optional handler to run when the user dismisses the dialog
-public func bummer(title: String, message: String, host: UIViewController, handler: (()->Void)? = nil) {
-    let action = UIAlertAction(title: BummerButtonTitle, style: .cancel) { _ in
+public func bummer(title: String, message: String, host: UIViewController,
+                   handler: (()->Void)? = nil) {
+    inform(title: title, message: message, host: host, bummer: true, handler: handler)
+}
+
+
+public func inform(title: String, message: String, host: UIViewController,
+                   bummer: Bool = false, handler: (()->Void)? = nil) {
+    let title = bummer ? BummerButtonTitle : OkButtonTitle
+    let action = UIAlertAction(title: title, style: .cancel) { _ in
         handler?()
     }
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
