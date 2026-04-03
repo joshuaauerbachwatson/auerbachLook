@@ -77,8 +77,8 @@ public func bummer(title: String, message: String, host: UIViewController,
 
 public func inform(title: String, message: String, host: UIViewController,
                    bummer: Bool = false, handler: (()->Void)? = nil) {
-    let title = bummer ? BummerButtonTitle : OkButtonTitle
-    let action = UIAlertAction(title: title, style: .cancel) { _ in
+    let buttonTitle = bummer ? BummerButtonTitle : OkButtonTitle
+    let action = UIAlertAction(title: buttonTitle, style: .cancel) { _ in
         handler?()
     }
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
