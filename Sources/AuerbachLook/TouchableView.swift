@@ -52,9 +52,9 @@ open class TouchableView<View: UIView> : UIView {
     }
     
     @available(iOS 14.0, *)
-    public func setContextMenu(_ menu: UIMenu) {
+    public func setContextMenu(_ menu: UIMenu, immediate: Bool = false) {
         button.menu = menu
-        button.showsMenuAsPrimaryAction = false
+        button.showsMenuAsPrimaryAction = immediate
     }
     
     public required init?(coder aDecoder: NSCoder) {
