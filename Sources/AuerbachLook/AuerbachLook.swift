@@ -144,12 +144,14 @@ public func configureTouchableLabel(_ ans: TouchableLabel, target: AnyObject, ac
 // Configure a TouchableLabel given a background color and an action.  Add to a view.
 // The behavior when touched is defined by a UIAction
 @available(iOS 14.0, *)
-public func configureTouchableLabel(_ ans: TouchableLabel, action: UIAction, tag: Int = 0, parent: UIView) {
+public func configureTouchableLabel(_ ans: TouchableLabel, action: UIAction?, tag: Int = 0, parent: UIView) {
     ans.view.backgroundColor = TouchableBackground
     ans.view.textColor = TouchableTextColor
     ans.view.textAlignment = .center
     ans.view.adjustsFontSizeToFitWidth = true
-    ans.addAction(action: action, tag: tag)
+    if let action {
+        ans.addAction(action: action, tag: tag)
+    }
     parent.addSubview(ans)
 }
 
