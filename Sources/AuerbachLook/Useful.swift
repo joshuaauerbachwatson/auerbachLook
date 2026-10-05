@@ -252,6 +252,27 @@ public func cropImage(_ original: UIImage, _ rect: CGRect) -> UIImage {
     return ans
 }
 
+// A front-end for JSONDecoder.decode that displays input on failure
+public func decodeResponse<T>(_ type: T.Type, from data: Data) -> Result<T, Error> where T: Decodable {
+    do {
+        let result = try JSONDecoder().decode(type, from: data)
+        return .success(result)
+    } catch {
+        if let printable = String(data: data, encoding: .utf8) {
+            Logger.log("Failure to decode.  Data is \(printable)")
+        } else if data.count == 0 {
+            Logger.log("Failure to decode.  Data is empty")
+        } else {
+            Logger.log("Failure to decode.  Data of length \(data.count) is not printable")
+            let limit = min(data.count, 32)
+            let hexes = data[0..<limit].map { String(format: "%02X", $0) }
+            let dumped = hexes.joined(separator: " ")
+            Logger.log(dumped)
+        }
+        return .failure(error)
+    }
+}
+
 // Constant used by the below and after functions as the default gap value.
 public let DialogSpacer = CGFloat(4)
 
